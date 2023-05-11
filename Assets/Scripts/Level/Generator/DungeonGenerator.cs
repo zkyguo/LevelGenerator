@@ -46,17 +46,17 @@ public class DungeonGenerator : SerializedMonoBehaviour
                 if (type == GenerationType.ThreeDimension)
                 {
                     newPosition = new Vector3Int(
-                        Random.Range(-boundsRadius, boundsRadius),
-                        Random.Range(-boundsRadius, boundsRadius),
-                        Random.Range(-boundsRadius, boundsRadius)
+                        Random.Range(-boundsRadius + newScale.x, boundsRadius - newScale.x),
+                        Random.Range(-boundsRadius + newScale.y, boundsRadius - newScale.y),
+                        Random.Range(-boundsRadius + newScale.z, boundsRadius - newScale.z)
                     );
                 }
                 else
                 {
                     newPosition = new Vector3Int(
-                        Random.Range(-boundsRadius, boundsRadius),
+                        Random.Range(-boundsRadius + newScale.x / 2, boundsRadius - newScale.x / 2),
                         0,
-                        Random.Range(-boundsRadius, boundsRadius)
+                        Random.Range(-boundsRadius + newScale.z / 2, boundsRadius - newScale.z / 2)
                     );
                 }
 
