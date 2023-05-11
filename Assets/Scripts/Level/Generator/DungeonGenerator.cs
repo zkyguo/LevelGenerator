@@ -24,6 +24,8 @@ public class DungeonGenerator : SerializedMonoBehaviour
     public int maxIteration = 10;
 
     private List<GameObject> generatedCubes = new List<GameObject>();
+    [SerializeField]
+    private MyGridSystem grid; //TODO : change to auto get Grid or Put grid to static
 
     [Button("Generate")]
     private void GenerateRandomCubes()
@@ -46,9 +48,9 @@ public class DungeonGenerator : SerializedMonoBehaviour
                 if (type == GenerationType.ThreeDimension)
                 {
                     newPosition = new Vector3Int(
-                        Random.Range(-boundsRadius + newScale.x, boundsRadius - newScale.x),
-                        Random.Range(-boundsRadius + newScale.y, boundsRadius - newScale.y),
-                        Random.Range(-boundsRadius + newScale.z, boundsRadius - newScale.z)
+                        Random.Range(-boundsRadius + newScale.x / 2, boundsRadius - newScale.x / 2),
+                        Random.Range(-boundsRadius + newScale.y / 2, boundsRadius - newScale.y / 2),
+                        Random.Range(-boundsRadius + newScale.z / 2, boundsRadius - newScale.z / 2)
                     );
                 }
                 else
@@ -78,11 +80,8 @@ public class DungeonGenerator : SerializedMonoBehaviour
 
             // Only instantiate new cube if a valid position is found
             if (validPosition)
-            {
-                GameObject newCube = Instantiate(cubePrefab, newPosition, Quaternion.identity);
-                newCube.transform.localScale = newScale;
-
-                generatedCubes.Add(newCube);
+            {             
+                generatedCubes.Add(grid.SetObjectAt(cubePrefab, newScale, newPosition));
             }
         }
     }
@@ -108,7 +107,6 @@ public class DungeonGenerator : SerializedMonoBehaviour
             generatedCubes.Add(obj);
         }
     }
-
 
 }
 
