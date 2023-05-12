@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class PathGenerator : MonoBehaviour
+/// <summary>
+/// Generate connection between Rooms
+/// </summary>
+public class PathGenerator : SerializedMonoBehaviour
 {
-    public List<GameObject> cubes; // Your list of cubes
+    private List<GameObject> cubes; // Your list of cubes
     public Vector2Int offset;
 
     private Dictionary<GameObject, float> minDistance = new Dictionary<GameObject, float>();
     private Dictionary<GameObject, GameObject> connectedRoom = new Dictionary<GameObject, GameObject>();
     private HashSet<GameObject> visitedCubes = new HashSet<GameObject>();
 
+
     [Button("Generate Path")]
     void GeneratePath()
     {
         AddRoomsInScene();
         FindAllConnection();
-        FindAllPointDepartAndEnd();
     }
 
     /// <summary>
@@ -74,12 +77,6 @@ public class PathGenerator : MonoBehaviour
 
         return minDistanceCube;
     }
-
-    void FindAllPointDepartAndEnd()
-    {
-
-    }
-
 
     void DrawLines()
     {

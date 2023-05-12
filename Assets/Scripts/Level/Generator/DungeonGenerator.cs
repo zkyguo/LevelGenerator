@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -8,6 +9,9 @@ public enum GenerationType
     TwoDimension, ThreeDimension
 }
 
+/// <summary>
+/// Determinate placement of rooms
+/// </summary>
 public class DungeonGenerator : SerializedMonoBehaviour
 {
     
@@ -78,10 +82,12 @@ public class DungeonGenerator : SerializedMonoBehaviour
                 index++;
             }
 
-            // Only instantiate new cube if a valid position is found
+            // Only instantiate new room if a valid position is found
             if (validPosition)
-            {             
-                generatedCubes.Add(grid.SetObjectAt(cubePrefab, newScale, newPosition));
+            {
+                GameObject room = grid.SetObjectAt(cubePrefab, newScale, newPosition);
+                room.name = "Room" + generatedCubes.Count();
+                generatedCubes.Add(room);
             }
         }
     }

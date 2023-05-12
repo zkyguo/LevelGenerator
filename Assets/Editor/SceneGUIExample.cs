@@ -54,7 +54,7 @@ public class SceneGUIExample
             Bounds bounds = new Bounds(center, Vector3.zero);
             foreach (GameObject cube in cubes)
             {
-                bounds.Encapsulate(cube.GetComponent<Renderer>().bounds);
+                bounds.Encapsulate(cube.transform.GetChild(0).GetComponent<Renderer>().bounds);
             }
 
             if (sceneView != null)
