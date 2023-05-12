@@ -25,14 +25,21 @@ public class Room : MonoBehaviour
         occupiedCells = allNodeInside;
         Name = transform.name;
         grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<MyGridSystem>();
-        GetRandomBoundaryCell();
+        //GetRandomBoundaryCell();
     }
 
 
     public Vector3 GetRandomBoundaryCell()
     {
-        // Find all boundary cells
 
+        // Randomly select one of the boundary cells
+        if (boundaryCells.Count > 0)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, boundaryCells.Count);
+            return boundaryCells[randomIndex];
+        }
+
+        // Find all boundary cells
         foreach (var cell in occupiedCells)
         {
             // Check the six neighboring cells

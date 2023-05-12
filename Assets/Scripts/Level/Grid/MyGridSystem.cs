@@ -2,6 +2,11 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
+public enum CellType
+{
+    Void, Room, Path
+}
+
 public class MyGridSystem : MonoBehaviour
 {
     [SerializeField]
@@ -14,7 +19,7 @@ public class MyGridSystem : MonoBehaviour
     /// <summary>
     /// <position, is cell void>
     /// </summary>
-    public Dictionary<Vector3, bool> gridCells = new Dictionary<Vector3, bool>();
+    public Dictionary<Vector3, CellType> gridCells = new Dictionary<Vector3, CellType>();
 
 
     #region Public
@@ -62,7 +67,7 @@ public class MyGridSystem : MonoBehaviour
     /// <returns></returns>
     public bool IsPositionEmpty(Vector3 WorldPosition)
     {
-        return gridCells[WorldToGrid(WorldPosition)];
+        return gridCells[WorldToGrid(WorldPosition)] == CellType.Void;
     }
     #endregion
 
@@ -81,7 +86,7 @@ public class MyGridSystem : MonoBehaviour
             {
                 for (int z = -zSize; z < zSize; z++)
                 {
-                    gridCells.Add(new Vector3(x + 0.5f,y+0.5f,z+0.5f), false);
+                    gridCells.Add(new Vector3(x + 0.5f,y+0.5f,z+0.5f), CellType.Void);
                 }
             }
         }
@@ -94,7 +99,7 @@ public class MyGridSystem : MonoBehaviour
     /// <returns></returns>
     bool IsCellEmpty(Vector3 GridPosition)
     {
-        return gridCells[GridPosition];
+        return gridCells[GridPosition] == CellType.Void;
     }
 
     /// <summary>
@@ -117,7 +122,7 @@ public class MyGridSystem : MonoBehaviour
                 {
                     Vector3 cell = new Vector3Int(x,y,z);
                     cells.Add(WorldToGrid(cell));
-                    gridCells[WorldToGrid(cell)] = true;
+                    gridCells[WorldToGrid(cell)] = CellType.Room;
                 }
             }
         }
@@ -142,7 +147,7 @@ public class MyGridSystem : MonoBehaviour
             {
                 for (int z = start.z; z < end.z; z++)
                 {
-                    gridCells[WorldToGrid(new Vector3Int(x, y, z))] = false;
+                    gridCells[WorldToGrid(new Vector3Int(x, y, z))] = CellType.Void;
                 }
             }
         }
@@ -171,8 +176,8 @@ public class MyGridSystem : MonoBehaviour
             {
                 for (int z = -zSize; z <= zSize; z++)
                 {
-                    gridCells[new Vector3(xSize + 1 + 0.5f, y + 0.5f, z + 0.5f)] = false;
-                    gridCells[new Vector3(-xSize - 1 + 0.5f, y + 0.5f, z + 0.5f)] = false;
+                    gridCells[new Vector3(xSize + 1 + 0.5f, y + 0.5f, z + 0.5f)] = CellType.Void;
+                    gridCells[new Vector3(-xSize - 1 + 0.5f, y + 0.5f, z + 0.5f)] = CellType.Void;
                 }
             }
             xSize++;
@@ -183,8 +188,8 @@ public class MyGridSystem : MonoBehaviour
             {
                 for (int z = -zSize; z <= zSize; z++)
                 {
-                    gridCells[new Vector3(x + 0.5f, ySize + 1 + 0.5f, z + 0.5f)] = false;
-                    gridCells[new Vector3(x + 0.5f, -ySize - 1 + 0.5f, z + 0.5f)] = false;
+                    gridCells[new Vector3(x + 0.5f, ySize + 1 + 0.5f, z + 0.5f)] = CellType.Void;
+                    gridCells[new Vector3(x + 0.5f, -ySize - 1 + 0.5f, z + 0.5f)] = CellType.Void;
                 }
             }
             ySize++;
@@ -195,26 +200,26 @@ public class MyGridSystem : MonoBehaviour
             {
                 for (int y = -ySize; y <= ySize; y++)
                 {
-                    gridCells[new Vector3(x + 0.5f, y + 0.5f, zSize + 1 + 0.5f)] = false;
-                    gridCells[new Vector3(x + 0.5f, y + 0.5f, -zSize - 1 + 0.5f)] = false;
+                    gridCells[new Vector3(x + 0.5f, y + 0.5f, zSize + 1 + 0.5f)] = CellType.Void;
+                    gridCells[new Vector3(x + 0.5f, y + 0.5f, -zSize - 1 + 0.5f)] = CellType.Void;
                 }
             }
             zSize++;
         }
     }
 
-    /*void OnDrawGizmos()
+   /* void OnDrawGizmos()
     {
-        foreach (KeyValuePair<Vector3, bool> item in grid)
+        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
         {
             Vector3 coord = item.Key;
-            if (item.Value)
+            if (item.Value == CellType.Void)
             {
-                Gizmos.color = Color.red;
+                Gizmos.color = Color.blue;
             }
             else
             {
-                Gizmos.color = Color.blue;
+                Gizmos.color = Color.red;
             }
             Gizmos.DrawSphere(coord, 0.1f);
         }
@@ -222,7 +227,7 @@ public class MyGridSystem : MonoBehaviour
 
     void DrawGrid()
     {
-        foreach (KeyValuePair<Vector3, bool> item in gridCells)
+        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
         {
             Vector3 coord = item.Key;
             Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.white,1f);
