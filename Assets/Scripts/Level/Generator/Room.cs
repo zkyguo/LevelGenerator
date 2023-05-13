@@ -7,24 +7,25 @@ using static UnityEditor.Progress;
 public class Room : MonoBehaviour
 {
     List<GameObject> assets = new List<GameObject>();
+    [SerializeField]
     Vector3 CentrePosition;
 
-    List<Vector3> occupiedCells = new List<Vector3> ();
+    public List<Vector3> occupiedCells = new List<Vector3>();
     [SerializeField]
     List<Vector3> boundaryCells = new List<Vector3>();
 
     Vector3Int Size = new Vector3Int();
     String Name;
-
+    [SerializeField]
     MyGridSystem grid;
 
     public void setRoom(Vector3Int _size, List<Vector3> allNodeInside)
     {
+        grid = SingletonManager.Instance.GetSingleton<MyGridSystem>();
         Size = _size;
-        CentrePosition = this.transform.localPosition;
         occupiedCells = allNodeInside;
         Name = transform.name;
-        grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<MyGridSystem>();
+        
         //GetRandomBoundaryCell();
     }
 
@@ -70,14 +71,16 @@ public class Room : MonoBehaviour
 
     }
 
-    private void OnDrawGizmos()
+    public void SetCentrePosition(Vector3 position)
     {
-        foreach (var cell in boundaryCells)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawSphere(cell, 0.1f);
-        }
+        CentrePosition = position;
     }
+
+    public Vector3 GetCentrePosition()
+    {
+        return CentrePosition;
+    }
+
 
     private void OnDestroy()
     {

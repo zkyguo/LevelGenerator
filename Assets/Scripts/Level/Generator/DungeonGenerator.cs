@@ -12,7 +12,7 @@ public enum GenerationType
 /// <summary>
 /// Determinate placement of rooms
 /// </summary>
-public class DungeonGenerator : SerializedMonoBehaviour
+public class DungeonGenerator : Singleton
 {
     
     public GameObject cubePrefab;
@@ -24,7 +24,8 @@ public class DungeonGenerator : SerializedMonoBehaviour
     private Vector3Int maxSize = new Vector3Int(5, 2, 5);
     public float minDistance = 1.0f;
     public float maxDistance = 5.0f;
-    public int boundsRadius = 10;
+    [SerializeField]
+    public Vector3Int boundsRadius;
     public int maxIteration = 10;
 
     private List<GameObject> generatedCubes = new List<GameObject>();
@@ -52,17 +53,17 @@ public class DungeonGenerator : SerializedMonoBehaviour
                 if (type == GenerationType.ThreeDimension)
                 {
                     newPosition = new Vector3Int(
-                        Random.Range(-boundsRadius + newScale.x / 2, boundsRadius - newScale.x / 2),
-                        Random.Range(-boundsRadius + newScale.y / 2, boundsRadius - newScale.y / 2),
-                        Random.Range(-boundsRadius + newScale.z / 2, boundsRadius - newScale.z / 2)
+                        Random.Range(-boundsRadius.x + newScale.x / 2, boundsRadius.x - newScale.x / 2),
+                        Random.Range(-boundsRadius.y + newScale.y / 2, boundsRadius.y - newScale.y / 2),
+                        Random.Range(-boundsRadius.z + newScale.z / 2, boundsRadius.z - newScale.z / 2)
                     );
                 }
                 else
                 {
                     newPosition = new Vector3Int(
-                        Random.Range(-boundsRadius + newScale.x / 2, boundsRadius - newScale.x / 2),
+                        Random.Range(-boundsRadius.x + newScale.x / 2, boundsRadius.x - newScale.x / 2),
                         0,
-                        Random.Range(-boundsRadius + newScale.z / 2, boundsRadius - newScale.z / 2)
+                        Random.Range(-boundsRadius.z + newScale.z / 2, boundsRadius.z - newScale.z / 2)
                     );
                 }
 
@@ -90,6 +91,8 @@ public class DungeonGenerator : SerializedMonoBehaviour
                 generatedCubes.Add(room);
             }
         }
+
+        grid.ExtendGrid();
     }
 
 

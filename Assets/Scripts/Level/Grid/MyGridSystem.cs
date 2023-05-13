@@ -7,7 +7,7 @@ public enum CellType
     Void, Room, Path
 }
 
-public class MyGridSystem : MonoBehaviour
+public class MyGridSystem : Singleton
 {
     [SerializeField]
     private int xSize;
@@ -43,8 +43,7 @@ public class MyGridSystem : MonoBehaviour
             Vector3 offset = new Vector3(size.x % 2 == 0 ? 0 : 0.5f, size.y % 2 == 0 ? 0 : 0.5f, size.z % 2 == 0 ? 0 : 0.5f);
             GameObject gameObject = Instantiate(prefab, worldPosition + offset, Quaternion.identity);
             gameObject.transform.localScale = size;
-
-            prefab.GetComponent<Room>().setRoom(size, PlaceObject(worldPosition, size));
+            gameObject.GetComponent<Room>().setRoom(size, PlaceObject(worldPosition, size, gameObject.GetComponent<Room>()));
             return gameObject;
         }
         RemoveObject(size, worldPosition);
@@ -74,7 +73,7 @@ public class MyGridSystem : MonoBehaviour
     [Button("Show Grid")]
     void ShowGrid()
     {
-        Initialize();
+        
     }
 
     void Initialize()
@@ -107,7 +106,7 @@ public class MyGridSystem : MonoBehaviour
     /// </summary>
     /// <param name="placePosition"></param>
     /// <param name="size"></param>
-    List<Vector3> PlaceObject(Vector3Int placePosition, Vector3Int size)
+    List<Vector3> PlaceObject(Vector3Int placePosition, Vector3Int size, Room room)
     {
         Vector3Int halfSize = new Vector3Int(size.x / 2, size.y / 2, size.z / 2);
         Vector3Int start = placePosition - halfSize;
@@ -121,6 +120,10 @@ public class MyGridSystem : MonoBehaviour
                 for (int z = start.z; z < end.z; z++)
                 {
                     Vector3 cell = new Vector3Int(x,y,z);
+                    if(cell == placePosition)
+                    {
+                        room.SetCentrePosition(WorldToGrid(cell));
+                    }
                     cells.Add(WorldToGrid(cell));
                     gridCells[WorldToGrid(cell)] = CellType.Room;
                 }
@@ -208,22 +211,55 @@ public class MyGridSystem : MonoBehaviour
         }
     }
 
-   /* void OnDrawGizmos()
+    public void ExtendGrid()
     {
-        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+        // Expand in X direction
+        for (int y = -ySize; y <= ySize; y++)
         {
-            Vector3 coord = item.Key;
-            if (item.Value == CellType.Void)
+            for (int z = -zSize; z <= zSize; z++)
             {
-                Gizmos.color = Color.blue;
+                gridCells[new Vector3(xSize + 1, y, z)] = CellType.Void;
             }
-            else
-            {
-                Gizmos.color = Color.red;
-            }
-            Gizmos.DrawSphere(coord, 0.1f);
         }
-    }*/
+        xSize++;
+
+        // Expand in Y direction
+        for (int x = -xSize; x <= xSize; x++)
+        {
+            for (int z = -zSize; z <= zSize; z++)
+            {
+                gridCells[new Vector3(x, ySize + 1, z)] = CellType.Void;
+            }
+        }
+        ySize++;
+
+        // Expand in Z direction
+        for (int x = -xSize; x <= xSize; x++)
+        {
+            for (int y = -ySize; y <= ySize; y++)
+            {
+                gridCells[new Vector3(x, y, zSize + 1)] = CellType.Void;
+            }
+        }
+        zSize++;
+    }
+
+    /*void OnDrawGizmos()
+     {
+         foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+         {
+             Vector3 coord = item.Key;
+             if (item.Value == CellType.Void)
+             {
+                 Gizmos.color = Color.blue;
+             }
+             else
+             {
+                 Gizmos.color = Color.red;
+             }
+             Gizmos.DrawSphere(coord, 0.1f);
+         }
+     }*/
 
     void DrawGrid()
     {

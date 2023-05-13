@@ -2,34 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class PathCalculator
+public static class CollidorCalculator
 {
-    public static List<Vector3Int> FindPath(Room roomA, Room roomB)
+
+    public static List<Vector3> FindPath(Room roomA, Room roomB, Dictionary<Vector3, CellType> grid)
     {
         Vector3 start = roomA.GetRandomBoundaryCell();
         Vector3 goal = roomB.GetRandomBoundaryCell();
 
-        Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>();
-        Dictionary<Vector3Int, float> costSoFar = new Dictionary<Vector3Int, float>();
+        Dictionary<Vector3, Vector3> cameFrom = new Dictionary<Vector3, Vector3>();
+        Dictionary<Vector3, float> costSoFar = new Dictionary<Vector3, float>();
 
-        PriorityQueue<Vector3Int> frontier = new PriorityQueue<Vector3Int>();
+        PriorityQueue<Vector3> frontier = new PriorityQueue<Vector3>();
         frontier.Enqueue(start, 0);
 
         cameFrom[start] = start;
         costSoFar[start] = 0;
 
-        while (!frontier.IsEmpty)
+        while (!frontier.IsEmpty())
         {
-            Vector3Int current = frontier.Dequeue();
+            Vector3 current = frontier.Dequeue();
 
-            if (current == goal)
+            if (current == goal || roomB.occupiedCells.Contains(current))
             {
                 // We found a path!
+                if(current !=  goal)
+                {
+                    return ReconstructPath(cameFrom, start, current);
+                }
                 return ReconstructPath(cameFrom, start, goal);
+
             }
 
             // Check all neighbors
-            foreach (Vector3Int next in GetNeighbors(current))
+            foreach (Vector3 next in GetNeighbors(current, grid))
             {
                 float newCost = costSoFar[current] + 1; // Assuming all moves have a cost of 1
                 if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
@@ -46,10 +52,10 @@ public static class PathCalculator
         return null;
     }
 
-    private static List<Vector3Int> ReconstructPath(Dictionary<Vector3Int, Vector3Int> cameFrom, Vector3Int start, Vector3Int goal)
+    private static List<Vector3> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 start, Vector3 goal)
     {
-        List<Vector3Int> path = new List<Vector3Int>();
-        Vector3Int current = goal;
+        List<Vector3> path = new List<Vector3>();
+        Vector3 current = goal;
         while (current != start)
         {
             path.Add(current);
@@ -60,27 +66,27 @@ public static class PathCalculator
         return path;
     }
 
-    private static float Heuristic(Vector3Int a, Vector3Int b)
+    private static float Heuristic(Vector3 a, Vector3 b)
     {
         // Use Manhattan distance for the heuristic
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
     }
 
-    private static IEnumerable<Vector3Int> GetNeighbors(Vector3Int cell)
+    private static IEnumerable<Vector3> GetNeighbors(Vector3 cell, Dictionary<Vector3, CellType> grid)
     {
         // Return the six neighboring cells
-        Vector3Int[] neighbors = new Vector3Int[]
+        Vector3[] neighbors = new Vector3[]
         {
-        new Vector3Int(cell.x + 1, cell.y, cell.z),
-        new Vector3Int(cell.x - 1, cell.y, cell.z),
-        new Vector3Int(cell.x, cell.y + 1, cell.z),
-        new Vector3Int(cell.x, cell.y - 1, cell.z),
-        new Vector3Int(cell.x, cell.y, cell.z + 1),
-        new Vector3Int(cell.x, cell.y, cell.z - 1),
+        new Vector3(cell.x + 1, cell.y, cell.z),
+        new Vector3(cell.x - 1, cell.y, cell.z),
+        new Vector3(cell.x, cell.y + 1, cell.z),
+        new Vector3(cell.x, cell.y - 1, cell.z),
+        new Vector3(cell.x, cell.y, cell.z + 1),
+        new Vector3(cell.x, cell.y, cell.z - 1),
         };
         foreach (var neighbor in neighbors)
         {
-            if (grid.ContainsKey(neighbor) && !grid[neighbor])
+            if (grid.ContainsKey(neighbor) && grid[neighbor] == CellType.Void)
             {
                 yield return neighbor;
             }

@@ -6,13 +6,15 @@ using Sirenix.OdinInspector;
 /// <summary>
 /// Generate connection between Rooms
 /// </summary>
-public class PathGenerator : SerializedMonoBehaviour
+public class PathGenerator : Singleton
 {
-    private List<GameObject> cubes; // Your list of cubes
+    private List<GameObject> cubes = new List<GameObject>(); // Your list of cubes
     public Vector2Int offset;
 
     private Dictionary<GameObject, float> minDistance = new Dictionary<GameObject, float>();
+    [SerializeField]
     private Dictionary<GameObject, GameObject> connectedRoom = new Dictionary<GameObject, GameObject>();
+    private Dictionary<GameObject, GameObject> neigboursRoom = new Dictionary<GameObject, GameObject>();
     private HashSet<GameObject> visitedCubes = new HashSet<GameObject>();
 
 
@@ -101,4 +103,10 @@ public class PathGenerator : SerializedMonoBehaviour
             cubes.Add(obj);
         }
     }
+
+    public Dictionary<GameObject, GameObject> getConnectRoom()
+    {
+        return connectedRoom;
+    }
+
 }
