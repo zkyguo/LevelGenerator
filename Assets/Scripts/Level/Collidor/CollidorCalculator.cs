@@ -5,7 +5,7 @@ using UnityEngine;
 public static class CollidorCalculator
 {
 
-    public static List<Vector3> FindPath(Room roomA, Room roomB, Dictionary<Vector3, CellType> grid)
+    public static List<Vector3> FindPath(Room roomA, Room roomB, MyGridSystem grid)
     {
         Vector3 start = roomA.GetRandomBoundaryCell();
         Vector3 goal = roomB.GetRandomBoundaryCell();
@@ -34,17 +34,26 @@ public static class CollidorCalculator
 
             }
 
+            bool canAdd = true;
             // Check all neighbors
-            foreach (Vector3 next in GetNeighbors(current, grid))
+            foreach (Vector3 next in GetNeighbors(current, grid.GetGridCells(), goal))
             {
-                float newCost = costSoFar[current] + 1; // Assuming all moves have a cost of 1
-                if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                if(next.y != current.y)
                 {
-                    costSoFar[next] = newCost;
-                    float priority = newCost + Heuristic(next, goal);
-                    frontier.Enqueue(next, priority);
-                    cameFrom[next] = current;
+                    canAdd = grid.IsStairClear(current, next);
                 }
+                if(canAdd)
+                {
+                    float newCost = costSoFar[current] + 1; // Assuming all moves have a cost of 1
+                    if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+                    {
+                        costSoFar[next] = newCost;
+                        float priority = newCost + Heuristic(next, goal);
+                        frontier.Enqueue(next, priority);
+                        cameFrom[next] = current;                    
+                    }
+                }
+                canAdd = true;
             }
         }
 
@@ -72,24 +81,34 @@ public static class CollidorCalculator
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
     }
 
-    private static IEnumerable<Vector3> GetNeighbors(Vector3 cell, Dictionary<Vector3, CellType> grid)
+    private static IEnumerable<Vector3> GetNeighbors(Vector3 current, Dictionary<Vector3, CellType> grid, Vector3 goal)
     {
         // Return the six neighboring cells
         Vector3[] neighbors = new Vector3[]
         {
-        new Vector3(cell.x + 1, cell.y, cell.z),
-        new Vector3(cell.x - 1, cell.y, cell.z),
-        new Vector3(cell.x, cell.y + 1, cell.z),
-        new Vector3(cell.x, cell.y - 1, cell.z),
-        new Vector3(cell.x, cell.y, cell.z + 1),
-        new Vector3(cell.x, cell.y, cell.z - 1),
+        new Vector3(current.x + 1, current.y, current.z),
+        new Vector3(current.x - 1, current.y, current.z),
+
+        new Vector3(current.x, current.y + 1, current.z+1),
+        new Vector3(current.x, current.y - 1, current.z+1),
+        new Vector3(current.x, current.y + 1, current.z-1),
+        new Vector3(current.x, current.y - 1, current.z-1),
+
+        new Vector3(current.x+1, current.y + 1, current.z),
+        new Vector3(current.x+1, current.y - 1, current.z),
+        new Vector3(current.x-1, current.y + 1, current.z),
+        new Vector3(current.x-1, current.y - 1, current.z),
+
+        new Vector3(current.x, current.y, current.z + 1),
+        new Vector3(current.x, current.y, current.z - 1),
         };
-        foreach (var neighbor in neighbors)
+        foreach (var next in neighbors)
         {
-            if (grid.ContainsKey(neighbor) && grid[neighbor] == CellType.Void)
+            if ( (grid.ContainsKey(next) && grid[next] == CellType.Void))
             {
-                yield return neighbor;
+                yield return next;
             }
         }
     }
+
 }

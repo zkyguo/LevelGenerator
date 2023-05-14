@@ -19,7 +19,7 @@ public class MyGridSystem : Singleton
     /// <summary>
     /// <position, is cell void>
     /// </summary>
-    public Dictionary<Vector3, CellType> gridCells = new Dictionary<Vector3, CellType>();
+     Dictionary<Vector3, CellType> gridCells = new Dictionary<Vector3, CellType>();
 
 
     #region Public
@@ -33,10 +33,6 @@ public class MyGridSystem : Singleton
     /// <returns></returns>
     public GameObject SetObjectAt(GameObject prefab, Vector3Int size, Vector3Int worldPosition)
     {
-        if(gridCells.Count == 0)
-        {
-            Initialize();
-        }
         if (prefab)
         {
             ExtendGrid(worldPosition, size); //Check if need extend grid
@@ -73,12 +69,15 @@ public class MyGridSystem : Singleton
     [Button("Show Grid")]
     void ShowGrid()
     {
-        
+        DrawGrid();
     }
 
-    void Initialize()
+    public void Initialize(Vector3Int size)
     {
-        
+        xSize = size.x;
+        ySize = size.y;
+        zSize = size.z;
+
         for (int x = -xSize; x < xSize; x++)
         {
             for (int y = -ySize; y < ySize; y++)
@@ -244,20 +243,31 @@ public class MyGridSystem : Singleton
         zSize++;
     }
 
+    public bool IsStairClear(Vector3 current, Vector3 next)
+    {
+        Vector3Int direction = Vector3Int.FloorToInt(next - current);
+        if (gridCells[next] != CellType.Void) return false;
+        Vector3 directionX = new Vector3(current.x + direction.x, current.y, current.z);
+        if (gridCells[directionX] != CellType.Void) return false;
+        Vector3 directionY = new Vector3(current.x, current.y + direction.y, current.z);
+        if (gridCells[directionY] != CellType.Void) return false;
+        Vector3 directionZ = new Vector3(current.x, current.y, current.z + direction.z);
+        if (gridCells[directionZ] != CellType.Void) return false;
+
+        return true;
+    }
+
     /*void OnDrawGizmos()
      {
          foreach (KeyValuePair<Vector3, CellType> item in gridCells)
          {
-             Vector3 coord = item.Key;
-             if (item.Value == CellType.Void)
+             
+             if (item.Value == CellType.Room)
              {
-                 Gizmos.color = Color.blue;
-             }
-             else
-             {
-                 Gizmos.color = Color.red;
-             }
-             Gizmos.DrawSphere(coord, 0.1f);
+                Vector3 coord = item.Key;
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(coord, 0.1f);
+             } 
          }
      }*/
 
@@ -265,12 +275,20 @@ public class MyGridSystem : Singleton
     {
         foreach (KeyValuePair<Vector3, CellType> item in gridCells)
         {
-            Vector3 coord = item.Key;
-            Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.white,1f);
-            Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y + 1, coord.z), Color.white,1f);
-            Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y, coord.z + 1), Color.white,1f);
+            if(item.Value == CellType.Room)
+            {
+                Vector3 coord = item.Key;
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.white, 1f);
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y + 1, coord.z), Color.white, 1f);
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y, coord.z + 1), Color.white, 1f);
+            }
+
         }
     }
 
+    public Dictionary<Vector3, CellType> GetGridCells()
+    {
+        return gridCells;
+    }
     
 }

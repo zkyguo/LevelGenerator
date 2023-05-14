@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -54,7 +55,7 @@ public class Room : MonoBehaviour
             };
             foreach (var neighbor in neighbors)
             {
-                if (grid.gridCells.ContainsKey(neighbor) && !occupiedCells.Contains(neighbor))
+                if (grid.GetGridCells().ContainsKey(neighbor) && !occupiedCells.Contains(neighbor))
                 {
                     boundaryCells.Add(neighbor);
                 }
@@ -79,6 +80,15 @@ public class Room : MonoBehaviour
     public Vector3 GetCentrePosition()
     {
         return CentrePosition;
+    }
+
+    private void OnDrawGizmos()
+    {
+        foreach (var cell in boundaryCells)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(cell, 0.2f);
+        }
     }
 
 

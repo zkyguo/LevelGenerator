@@ -35,9 +35,10 @@ public class DungeonGenerator : Singleton
     [Button("Generate")]
     private void GenerateRandomCubes()
     {
+        InitializeGrid();
         AddRoomsInScene();
         Clear();
-
+        
         for (int i = 0; i < numberOfCubes; i++)
         {
             bool validPosition = false;
@@ -117,5 +118,10 @@ public class DungeonGenerator : Singleton
         }
     }
 
+    private void InitializeGrid()
+    {
+        grid.Clear();
+        grid.Initialize(boundsRadius);
+    }
 }
 

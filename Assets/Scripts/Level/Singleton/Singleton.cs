@@ -33,11 +33,7 @@ public class Singleton : SerializedMonoBehaviour
             instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
-        else if (instance != this)
-        {
-            Debug.LogError("More than one Singleton instance found!");
-            Destroy(this.gameObject);
-        }
+
     }
 
 }

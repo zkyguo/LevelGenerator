@@ -20,7 +20,7 @@ public class CollidorGenerator : Singleton
         {
             Path.Add(CollidorCalculator.FindPath(pair.Key.GetComponent<Room>(),
                                            pair.Value.GetComponent<Room>(),
-                                           SingletonManager.Instance.GetSingleton<MyGridSystem>().gridCells));
+                                           SingletonManager.Instance.GetSingleton<MyGridSystem>()));
         }
        
     }
