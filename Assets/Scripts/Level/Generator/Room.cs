@@ -82,14 +82,14 @@ public class Room : MonoBehaviour
         return CentrePosition;
     }
 
-    private void OnDrawGizmos()
+   /* private void OnDrawGizmos()
     {
         foreach (var cell in boundaryCells)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(cell, 0.2f);
         }
-    }
+    }*/
 
 
     private void OnDestroy()

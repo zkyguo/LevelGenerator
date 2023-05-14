@@ -23,7 +23,7 @@ public static class CollidorCalculator
         {
             Vector3 current = frontier.Dequeue();
 
-            if (current == goal || roomB.occupiedCells.Contains(current))
+            if (current == goal)
             {
                 // We found a path!
                 if(current !=  goal)
@@ -38,9 +38,11 @@ public static class CollidorCalculator
             // Check all neighbors
             foreach (Vector3 next in GetNeighbors(current, grid.GetGridCells(), goal))
             {
+                List<Vector3> stair = new List<Vector3>();
                 if(next.y != current.y)
                 {
-                    canAdd = grid.IsStairClear(current, next);
+                    stair = grid.IsStairClear(current, next);
+                    canAdd = (stair != null);
                 }
                 if(canAdd)
                 {
@@ -50,7 +52,8 @@ public static class CollidorCalculator
                         costSoFar[next] = newCost;
                         float priority = newCost + Heuristic(next, goal);
                         frontier.Enqueue(next, priority);
-                        cameFrom[next] = current;                    
+                        cameFrom[next] = current;
+
                     }
                 }
                 canAdd = true;

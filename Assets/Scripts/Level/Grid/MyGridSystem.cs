@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 public enum CellType
 {
-    Void, Room, Path
+    Void, Room, Collidor, Stair
 }
 
 public class MyGridSystem : Singleton
@@ -19,7 +20,7 @@ public class MyGridSystem : Singleton
     /// <summary>
     /// <position, is cell void>
     /// </summary>
-     Dictionary<Vector3, CellType> gridCells = new Dictionary<Vector3, CellType>();
+    Dictionary<Vector3, CellType> gridCells = new Dictionary<Vector3, CellType>();
 
 
     #region Public
@@ -243,18 +244,26 @@ public class MyGridSystem : Singleton
         zSize++;
     }
 
-    public bool IsStairClear(Vector3 current, Vector3 next)
+    public List<Vector3> IsStairClear(Vector3 current, Vector3 next)
     {
-        Vector3Int direction = Vector3Int.FloorToInt(next - current);
-        if (gridCells[next] != CellType.Void) return false;
-        Vector3 directionX = new Vector3(current.x + direction.x, current.y, current.z);
-        if (gridCells[directionX] != CellType.Void) return false;
-        Vector3 directionY = new Vector3(current.x, current.y + direction.y, current.z);
-        if (gridCells[directionY] != CellType.Void) return false;
-        Vector3 directionZ = new Vector3(current.x, current.y, current.z + direction.z);
-        if (gridCells[directionZ] != CellType.Void) return false;
+        HashSet<Vector3> stairCell = new HashSet<Vector3>();
 
-        return true;
+        Vector3Int direction = Vector3Int.FloorToInt(next - current);
+        if (gridCells[next] != CellType.Void) return null;
+        Vector3 directionX = new Vector3(current.x + direction.x, current.y, current.z);
+        if (gridCells[directionX] != CellType.Void) return null;
+        Vector3 directionY = new Vector3(current.x, current.y + direction.y, current.z);
+        if (gridCells[directionY] != CellType.Void) return null;
+        Vector3 directionZ = new Vector3(current.x, current.y, current.z + direction.z);
+        if (gridCells[directionZ] != CellType.Void) return null;
+
+        stairCell.Add(directionX);
+        stairCell.Add(directionY);
+        stairCell.Add(directionZ);
+        stairCell.Add(current);
+        stairCell.Add(next);
+
+        return stairCell.ToList();
     }
 
     /*void OnDrawGizmos()
@@ -289,6 +298,11 @@ public class MyGridSystem : Singleton
     public Dictionary<Vector3, CellType> GetGridCells()
     {
         return gridCells;
+    }
+
+    public void SetCell(Vector3 pos, CellType type)
+    {
+        gridCells[pos] = type;
     }
     
 }

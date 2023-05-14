@@ -7,22 +7,25 @@ using UnityEngine;
 public class CollidorGenerator : Singleton
 {
     private Dictionary<GameObject, GameObject> connectedRoom = new Dictionary<GameObject, GameObject>();
-    [SerializeField]
     private List<List<Vector3>> Path = new List<List<Vector3>>();
+    [SerializeField]
+    MyGridSystem grid;
+    public int count;
 
     [Button("Generate")]
     void GenerateCollidors()
     {
         Clear();
         connectedRoom = SingletonManager.Instance.GetSingleton<PathGenerator>().getConnectRoom();
-
         foreach (var pair in connectedRoom)
         {
             Path.Add(CollidorCalculator.FindPath(pair.Key.GetComponent<Room>(),
-                                           pair.Value.GetComponent<Room>(),
-                                           SingletonManager.Instance.GetSingleton<MyGridSystem>()));
+                                           pair.Value.GetComponent<Room>(), grid
+                                           ));
         }
-       
+        count = Path.Count();
+
+
     }
 
     [Button("Show")]
