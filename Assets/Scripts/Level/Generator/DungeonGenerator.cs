@@ -92,8 +92,6 @@ public class DungeonGenerator : Singleton
                 generatedCubes.Add(room);
             }
         }
-
-        grid.ExtendGrid();
     }
 
 

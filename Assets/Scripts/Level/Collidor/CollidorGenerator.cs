@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+using static UnityEditor.Progress;
 
 public class CollidorGenerator : Singleton
 {
+    
+
     private Dictionary<GameObject, GameObject> connectedRoom = new Dictionary<GameObject, GameObject>();
-    private List<List<Vector3>> Path = new List<List<Vector3>>();
+    private List<List<Vector3>> PathList = new List<List<Vector3>>();
     [SerializeField]
     MyGridSystem grid;
-    public int count;
+    Dictionary<Vector3, CellType> initialGrid; 
 
     [Button("Generate")]
     void GenerateCollidors()
@@ -19,13 +23,11 @@ public class CollidorGenerator : Singleton
         connectedRoom = SingletonManager.Instance.GetSingleton<PathGenerator>().getConnectRoom();
         foreach (var pair in connectedRoom)
         {
-            Path.Add(CollidorCalculator.FindPath(pair.Key.GetComponent<Room>(),
-                                           pair.Value.GetComponent<Room>(), grid
-                                           ));
+            List<Vector3> path = CollidorCalculator.FindPath(pair.Key.GetComponent<Room>(),
+                                           pair.Value.GetComponent<Room>(), grid.GetGridCells()
+                                           );
+            PathList.Add(path);
         }
-        count = Path.Count();
-
-
     }
 
     [Button("Show")]
@@ -36,18 +38,38 @@ public class CollidorGenerator : Singleton
 
     void DrawRoad()
     {
-        foreach (var road in Path)
+        foreach (var road in PathList)
         {
-            for (int i = 0; i < road.Count - 1; i++)
-            {
-                Debug.DrawLine(road[i], road[i + 1], Color.red, 2f);
-            }
+
+                for (int i = 0; i < road.Count - 1; i++)
+                {
+                    Debug.DrawLine(road[i], road[i + 1], Color.white, 2f);
+                }
+            
+            
         }
 
     }
 
     void Clear()
     {
-        Path.Clear();
+        
+        PathList.Clear();
     }
+
+    void resetPath()
+    {
+        foreach (var path in PathList)
+        {
+            if(path?.Count > 0)
+            {
+                foreach (var pos in path)
+                {
+                    grid.SetCell(pos, CellType.Void);
+                }
+            }
+        }
+    }
+
+    
 }

@@ -67,17 +67,17 @@ public class MyGridSystem : Singleton
     }
     #endregion
 
-    [Button("Show Grid")]
-    void ShowGrid()
+   
+    void ShowRoom()
     {
-        DrawGrid();
+        
     }
 
     public void Initialize(Vector3Int size)
     {
-        xSize = size.x;
-        ySize = size.y;
-        zSize = size.z;
+        xSize = size.x + 1;
+        ySize = size.y + 1;
+        zSize = size.z + 1;
 
         for (int x = -xSize; x < xSize; x++)
         {
@@ -213,74 +213,80 @@ public class MyGridSystem : Singleton
 
     public void ExtendGrid()
     {
+        xSize++;
+        ySize++;
+        zSize++;
+
         // Expand in X direction
         for (int y = -ySize; y <= ySize; y++)
         {
             for (int z = -zSize; z <= zSize; z++)
             {
-                gridCells[new Vector3(xSize + 1, y, z)] = CellType.Void;
+                gridCells[new Vector3(xSize, y, z)] = CellType.Void;
             }
         }
-        xSize++;
+        for (int y = -ySize; y <= ySize; y++)
+        {
+            for (int z = -zSize; z <= zSize; z++)
+            {
+                gridCells[new Vector3(-xSize, y, z)] = CellType.Void;
+            }
+        }
 
         // Expand in Y direction
         for (int x = -xSize; x <= xSize; x++)
         {
             for (int z = -zSize; z <= zSize; z++)
             {
-                gridCells[new Vector3(x, ySize + 1, z)] = CellType.Void;
+                gridCells[new Vector3(x, ySize, z)] = CellType.Void;
             }
         }
-        ySize++;
+        for (int x = -xSize; x <= xSize; x++)
+        {
+            for (int z = -zSize; z <= zSize; z++)
+            {
+                gridCells[new Vector3(x, -ySize, z)] = CellType.Void;
+            }
+        }
+        
 
         // Expand in Z direction
         for (int x = -xSize; x <= xSize; x++)
         {
             for (int y = -ySize; y <= ySize; y++)
             {
-                gridCells[new Vector3(x, y, zSize + 1)] = CellType.Void;
+                gridCells[new Vector3(x, y, zSize)] = CellType.Void;
             }
         }
-        zSize++;
+        for (int x = -xSize; x <= xSize; x++)
+        {
+            for (int y = -ySize; y <= ySize; y++)
+            {
+                gridCells[new Vector3(x, y, -zSize - 1)] = CellType.Void;
+            }
+        }
+        
     }
 
-    public List<Vector3> IsStairClear(Vector3 current, Vector3 next)
+
+
+   /* void OnDrawGizmos()
     {
-        HashSet<Vector3> stairCell = new HashSet<Vector3>();
+        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+        {
 
-        Vector3Int direction = Vector3Int.FloorToInt(next - current);
-        if (gridCells[next] != CellType.Void) return null;
-        Vector3 directionX = new Vector3(current.x + direction.x, current.y, current.z);
-        if (gridCells[directionX] != CellType.Void) return null;
-        Vector3 directionY = new Vector3(current.x, current.y + direction.y, current.z);
-        if (gridCells[directionY] != CellType.Void) return null;
-        Vector3 directionZ = new Vector3(current.x, current.y, current.z + direction.z);
-        if (gridCells[directionZ] != CellType.Void) return null;
+            if (item.Value == CellType.Void)
+            {
 
-        stairCell.Add(directionX);
-        stairCell.Add(directionY);
-        stairCell.Add(directionZ);
-        stairCell.Add(current);
-        stairCell.Add(next);
-
-        return stairCell.ToList();
-    }
-
-    /*void OnDrawGizmos()
-     {
-         foreach (KeyValuePair<Vector3, CellType> item in gridCells)
-         {
-             
-             if (item.Value == CellType.Room)
-             {
                 Vector3 coord = item.Key;
                 Gizmos.color = Color.red;
                 Gizmos.DrawSphere(coord, 0.1f);
-             } 
-         }
-     }*/
+            }
+        }
+    }*/
 
-    void DrawGrid()
+    [Button("Show Room")]
+    void DrawRoom()
     {
         foreach (KeyValuePair<Vector3, CellType> item in gridCells)
         {
@@ -290,6 +296,37 @@ public class MyGridSystem : Singleton
                 Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.white, 1f);
                 Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y + 1, coord.z), Color.white, 1f);
                 Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y, coord.z + 1), Color.white, 1f);
+            }
+
+        }
+    }
+    [Button("Show Stair")]
+    void DrawStair()
+    {
+        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+        {
+            if (item.Value == CellType.Stair)
+            {
+                Vector3 coord = item.Key;
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.red, 1f);
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y + 1, coord.z), Color.red, 1f);
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y, coord.z + 1), Color.red, 1f);
+            }
+
+        }
+    }
+
+    [Button("Show Collidor")]
+    void DrawCollidor()
+    {
+        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+        {
+            if (item.Value == CellType.Stair)
+            {
+                Vector3 coord = item.Key;
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.red, 1f);
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y + 1, coord.z), Color.red, 1f);
+                Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x, coord.y, coord.z + 1), Color.red, 1f);
             }
 
         }
