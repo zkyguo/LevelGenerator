@@ -1,6 +1,5 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 public class CollidorGenerator : Singleton
@@ -46,7 +45,7 @@ public class CollidorGenerator : Singleton
         foreach (var road in PathList)
         {
 
-            if(road != null)
+            if (road != null)
             {
                 for (int i = 0; i < road.Count; i++)
                 {
@@ -54,23 +53,16 @@ public class CollidorGenerator : Singleton
                     {
                         allCollidors.Add(Instantiate(CollidorPrefab, road[i], Quaternion.identity));
                     }
-                    else if(grid.GetGridCells()[road[i]] == CellType.Stair)
+                    else if (grid.GetGridCells()[road[i]] == CellType.Stair)
                     {
-                        try
-                        {
-                            Vector3 normal = Vector3.Cross(road[i + 1] - road[i], road[i + 2] - road[i]).normalized;
-                            Quaternion rotation = Quaternion.LookRotation(normal);
-                            allCollidors.Add(Instantiate(StairPrefab, road[i] + (road[i + 3] - road[i]) / 2, rotation));
-                            i = i + 3;
-                        }
-                        catch (System.Exception)
-                        {
 
-                            Debug.Log(i + " " + road.Count);
-                        }
-                        
+                        Vector3 normal = Vector3.Cross(road[i + 1] - road[i], road[i + 2] - road[i]).normalized;
+                        Quaternion rotation = Quaternion.LookRotation(normal);
+                        allCollidors.Add(Instantiate(StairPrefab, road[i] + (road[i + 3] - road[i]) / 2, rotation));
+                        i = i + 3;
 
-                        
+
+
                     }
                 }
             }

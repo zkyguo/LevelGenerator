@@ -60,7 +60,7 @@ public class PathGenerator : Singleton
             minDistance.Remove(currentCube);
         }
 
-        DrawLines();
+        //DrawLines();
     }
 
     GameObject GetCubeWithMinDistance()
