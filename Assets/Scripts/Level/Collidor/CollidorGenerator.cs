@@ -1,25 +1,29 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.Progress;
 
 public class CollidorGenerator : Singleton
 {
-    
+
 
     private Dictionary<GameObject, GameObject> connectedRoom = new Dictionary<GameObject, GameObject>();
     private List<List<Vector3>> PathList = new List<List<Vector3>>();
     [SerializeField]
     MyGridSystem grid;
-    Dictionary<Vector3, CellType> initialGrid; 
+
+    [SerializeField]
+    GameObject CollidorPrefab;
+    [SerializeField]
+    GameObject StairPrefab;
+
+    private List<GameObject> allCollidors = new List<GameObject>();
 
     [Button("Generate")]
-    void GenerateCollidors()
+    public void GenerateCollidors()
     {
         Clear();
+        grid.ResetGrid();
         connectedRoom = SingletonManager.Instance.GetSingleton<PathGenerator>().getConnectRoom();
         foreach (var pair in connectedRoom)
         {
@@ -28,6 +32,7 @@ public class CollidorGenerator : Singleton
                                            );
             PathList.Add(path);
         }
+        GenerateCollidorAndStair();
     }
 
     [Button("Show")]
@@ -36,40 +41,67 @@ public class CollidorGenerator : Singleton
         DrawRoad();
     }
 
+    void GenerateCollidorAndStair()
+    {
+        foreach (var road in PathList)
+        {
+
+            if(road != null)
+            {
+                for (int i = 0; i < road.Count; i++)
+                {
+                    if (grid.GetGridCells()[road[i]] == CellType.Collidor)
+                    {
+                        allCollidors.Add(Instantiate(CollidorPrefab, road[i], Quaternion.identity));
+                    }
+                    else if(grid.GetGridCells()[road[i]] == CellType.Stair)
+                    {
+                        try
+                        {
+                            Vector3 normal = Vector3.Cross(road[i + 1] - road[i], road[i + 2] - road[i]).normalized;
+                            Quaternion rotation = Quaternion.LookRotation(normal);
+                            allCollidors.Add(Instantiate(StairPrefab, road[i] + (road[i + 3] - road[i]) / 2, rotation));
+                            i = i + 3;
+                        }
+                        catch (System.Exception)
+                        {
+
+                            Debug.Log(i + " " + road.Count);
+                        }
+                        
+
+                        
+                    }
+                }
+            }
+
+        }
+    }
+
     void DrawRoad()
     {
         foreach (var road in PathList)
         {
 
-                for (int i = 0; i < road.Count - 1; i++)
-                {
-                    Debug.DrawLine(road[i], road[i + 1], Color.white, 2f);
-                }
-            
-            
+            for (int i = 0; i < road.Count - 1; i++)
+            {
+                Debug.DrawLine(road[i], road[i + 1], Color.white, 2f);
+            }
+
         }
 
     }
 
     void Clear()
     {
-        
+
         PathList.Clear();
-    }
-
-    void resetPath()
-    {
-        foreach (var path in PathList)
+        foreach (var Collidor in allCollidors)
         {
-            if(path?.Count > 0)
-            {
-                foreach (var pos in path)
-                {
-                    grid.SetCell(pos, CellType.Void);
-                }
-            }
+            DestroyImmediate(Collidor);
         }
+        allCollidors.Clear();
     }
 
-    
+
 }

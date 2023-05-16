@@ -21,7 +21,7 @@ public class MyGridSystem : Singleton
     /// <position, is cell void>
     /// </summary>
     Dictionary<Vector3, CellType> gridCells = new Dictionary<Vector3, CellType>();
-
+    Dictionary<Vector3, CellType> initialCells = new Dictionary<Vector3, CellType>();
 
     #region Public
 
@@ -89,6 +89,7 @@ public class MyGridSystem : Singleton
                 }
             }
         }
+        initialCells = gridCells;
     }
 
     /// <summary>
@@ -270,16 +271,30 @@ public class MyGridSystem : Singleton
 
 
 
-   /* void OnDrawGizmos()
+    /*void OnDrawGizmos()
     {
         foreach (KeyValuePair<Vector3, CellType> item in gridCells)
         {
 
-            if (item.Value == CellType.Void)
+            if (item.Value == CellType.Collidor)
+            {
+
+                Vector3 coord = item.Key;
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(coord, 0.1f);
+            }
+            else if (item.Value == CellType.Void)
             {
 
                 Vector3 coord = item.Key;
                 Gizmos.color = Color.red;
+                Gizmos.DrawSphere(coord, 0.1f);
+            }
+            else if (item.Value == CellType.Stair)
+            {
+
+                Vector3 coord = item.Key;
+                Gizmos.color = Color.green;
                 Gizmos.DrawSphere(coord, 0.1f);
             }
         }
@@ -321,7 +336,7 @@ public class MyGridSystem : Singleton
     {
         foreach (KeyValuePair<Vector3, CellType> item in gridCells)
         {
-            if (item.Value == CellType.Stair)
+            if (item.Value == CellType.Collidor)
             {
                 Vector3 coord = item.Key;
                 Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.red, 1f);
@@ -342,4 +357,11 @@ public class MyGridSystem : Singleton
         gridCells[pos] = type;
     }
     
+    /// <summary>
+    /// Reset grid to initial status
+    /// </summary>
+    public void ResetGrid()
+    {
+        gridCells = new Dictionary<Vector3,CellType>(initialCells);
+    }
 }

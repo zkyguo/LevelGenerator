@@ -6,7 +6,7 @@ public static class CollidorCalculator
 {
     public static List<Vector3> FindPath(Room roomA, Room roomB, Dictionary<Vector3, CellType> gridCells)
     {
-        int nbTry = 3;
+        int nbTry = 5;
         while (nbTry != 0)
         {
             Vector3 start = roomA.GetRandomBoundaryCell();
@@ -15,6 +15,7 @@ public static class CollidorCalculator
             Dictionary<Vector3, Vector3> cameFrom = new Dictionary<Vector3, Vector3>();
             Dictionary<Vector3, float> costSoFar = new Dictionary<Vector3, float>();
             Dictionary<Vector3, HashSet<Vector3>> pathSoFar = new Dictionary<Vector3, HashSet<Vector3>>();
+            
 
             PriorityQueue<Vector3> frontier = new PriorityQueue<Vector3>();
             frontier.Enqueue(start, 0);
@@ -30,7 +31,7 @@ public static class CollidorCalculator
                 if (current == goal)
                 {
                     // We found a path!
-                    return ReconstructPath(cameFrom, start, goal);
+                    return ReconstructPath(cameFrom, start, goal, gridCells, pathSoFar);
                 }
 
                 // Check all neighbors
@@ -95,17 +96,45 @@ public static class CollidorCalculator
         return null;
     }
 
-    private static List<Vector3> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 start, Vector3 goal)
+    private static List<Vector3> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 start, Vector3 goal, Dictionary<Vector3, CellType> gridCells, Dictionary<Vector3, HashSet<Vector3>> pathSoFar)
     {
         HashSet<Vector3> path = new HashSet<Vector3>();
         Vector3 current = goal;
-        
+        Vector3 NextPosition = new Vector3();
+
         while (current != start)
         {
-            path.Add(current);
-            current = cameFrom[current];
+            NextPosition = cameFrom[current];
+            if (current.y != NextPosition.y)
+            {               
+                
+                List<Vector3> stair = FindStair(NextPosition, current, gridCells);
+                path.Add(current);
+                gridCells[current] = CellType.Stair;
+                path.Add(stair[1]);
+                path.Add(stair[2]);
+                gridCells[stair[1]] = CellType.Stair;
+                gridCells[stair[2]] = CellType.Stair;
+                path.Add(NextPosition);
+                gridCells[NextPosition] = CellType.Stair;
+                current = cameFrom[NextPosition];
+                
+            }
+            else
+            {
+                path.Add(current);
+                gridCells[current] = CellType.Collidor;
+                current = cameFrom[current];
+            }
+            
+            
         }
-        path.Add(start); // optional
+        if(!path.Contains(start))
+        {
+            path.Add(start); // optional
+            gridCells[start] = CellType.Collidor;
+        }
+
         path.Reverse();
         return path.ToList();
     }
@@ -138,9 +167,11 @@ public static class CollidorCalculator
         };
         foreach (var next in neighbors)
         {
-            if (grid.ContainsKey(next) && (grid[next] == CellType.Void))
+           
+            if (grid.ContainsKey(next))
             {
-                yield return next;
+                CellType type = grid[next];
+                if (type == CellType.Void || type == CellType.Collidor) yield return next;
             }
         }
     }
@@ -160,7 +191,7 @@ public static class CollidorCalculator
         if (gridCells.ContainsKey(directionY) && gridCells[directionY] != CellType.Void) return null;
 
         Vector3 directionZ = new Vector3(current.x, current.y, current.z + direction.z);
-        if (gridCells[directionZ] != CellType.Void) return null;
+        if (gridCells.ContainsKey(directionZ) &&  gridCells[directionZ] != CellType.Void) return null;
 
         stairCell.Add(current);
         stairCell.Add(directionX);

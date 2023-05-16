@@ -19,7 +19,7 @@ public class PathGenerator : Singleton
 
 
     [Button("Generate Path")]
-    void GeneratePath()
+    public void GeneratePath()
     {
         AddRoomsInScene();
         FindAllConnection();

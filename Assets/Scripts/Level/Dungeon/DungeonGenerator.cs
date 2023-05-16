@@ -31,9 +31,20 @@ public class DungeonGenerator : Singleton
     private List<GameObject> generatedCubes = new List<GameObject>();
     [SerializeField]
     private MyGridSystem grid; //TODO : change to auto get Grid or Put grid to static
+    [SerializeField]
+    private PathGenerator path; //TODO : change to auto get Grid or Put grid to static
+    [SerializeField]
+    private CollidorGenerator Collidor; //TODO : change to auto get Grid or Put grid to static
 
     [Button("Generate")]
-    private void GenerateRandomCubes()
+    private void Generate()
+    {
+        PlaceRandomRoom();
+        path.GeneratePath();
+        Collidor.GenerateCollidors();
+    }
+
+    private void PlaceRandomRoom()
     {
         InitializeGrid();
         AddRoomsInScene();
