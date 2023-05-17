@@ -8,6 +8,21 @@ public enum CellType
     Void, Room, Collidor, Stair
 }
 
+public class Cell
+{
+    Vector3 position;
+    CellType cellType;
+
+    public Cell(Vector3 _position, CellType _type)
+    {
+        position = _position;
+        cellType = _type;
+    }
+
+    public Vector3 Position { get => position; set => position = value; }
+    public CellType CellType { get => cellType; set => cellType = value; }
+}
+
 public class MyGridSystem : Singleton
 {
     [SerializeField]
@@ -20,8 +35,8 @@ public class MyGridSystem : Singleton
     /// <summary>
     /// <position, is cell void>
     /// </summary>
-    Dictionary<Vector3, CellType> gridCells = new Dictionary<Vector3, CellType>();
-    Dictionary<Vector3, CellType> initialCells = new Dictionary<Vector3, CellType>();
+    Dictionary<Vector3, Cell> gridCells = new Dictionary<Vector3, Cell>();
+    Dictionary<Vector3, Cell> initialCells = new Dictionary<Vector3, Cell>();
 
     #region Public
 
@@ -63,16 +78,14 @@ public class MyGridSystem : Singleton
     /// <returns></returns>
     public bool IsPositionEmpty(Vector3 WorldPosition)
     {
-        return gridCells[WorldToGrid(WorldPosition)] == CellType.Void;
+        return gridCells[WorldToGrid(WorldPosition)].CellType == CellType.Void;
     }
     #endregion
 
-   
-    void ShowRoom()
-    {
-        
-    }
-
+    /// <summary>
+    /// Initialize Grid by size
+    /// </summary>
+    /// <param name="size"></param>
     public void Initialize(Vector3Int size)
     {
         xSize = size.x + 1;
@@ -85,7 +98,8 @@ public class MyGridSystem : Singleton
             {
                 for (int z = -zSize; z < zSize; z++)
                 {
-                    gridCells.Add(new Vector3(x + 0.5f,y+0.5f,z+0.5f), CellType.Void);
+                    Vector3 position = new Vector3(x + 0.5f, y + 0.5f, z + 0.5f);
+                    gridCells.Add(position, new Cell(position,CellType.Void));
                 }
             }
         }
@@ -99,7 +113,7 @@ public class MyGridSystem : Singleton
     /// <returns></returns>
     bool IsCellEmpty(Vector3 GridPosition)
     {
-        return gridCells[GridPosition] == CellType.Void;
+        return gridCells[GridPosition].CellType == CellType.Void;
     }
 
     /// <summary>
@@ -126,7 +140,7 @@ public class MyGridSystem : Singleton
                         room.SetCentrePosition(WorldToGrid(cell));
                     }
                     cells.Add(WorldToGrid(cell));
-                    gridCells[WorldToGrid(cell)] = CellType.Room;
+                    gridCells[WorldToGrid(cell)].CellType = CellType.Room;
                 }
             }
         }
@@ -151,7 +165,7 @@ public class MyGridSystem : Singleton
             {
                 for (int z = start.z; z < end.z; z++)
                 {
-                    gridCells[WorldToGrid(new Vector3Int(x, y, z))] = CellType.Void;
+                    gridCells[WorldToGrid(new Vector3Int(x, y, z))].CellType = CellType.Void;
                 }
             }
         }
@@ -180,8 +194,8 @@ public class MyGridSystem : Singleton
             {
                 for (int z = -zSize; z <= zSize; z++)
                 {
-                    gridCells[new Vector3(xSize + 1 + 0.5f, y + 0.5f, z + 0.5f)] = CellType.Void;
-                    gridCells[new Vector3(-xSize - 1 + 0.5f, y + 0.5f, z + 0.5f)] = CellType.Void;
+                    gridCells[new Vector3(xSize + 1 + 0.5f, y + 0.5f, z + 0.5f)].CellType = CellType.Void;
+                    gridCells[new Vector3(-xSize - 1 + 0.5f, y + 0.5f, z + 0.5f)].CellType = CellType.Void;
                 }
             }
             xSize++;
@@ -192,8 +206,8 @@ public class MyGridSystem : Singleton
             {
                 for (int z = -zSize; z <= zSize; z++)
                 {
-                    gridCells[new Vector3(x + 0.5f, ySize + 1 + 0.5f, z + 0.5f)] = CellType.Void;
-                    gridCells[new Vector3(x + 0.5f, -ySize - 1 + 0.5f, z + 0.5f)] = CellType.Void;
+                    gridCells[new Vector3(x + 0.5f, ySize + 1 + 0.5f, z + 0.5f)].CellType = CellType.Void;
+                    gridCells[new Vector3(x + 0.5f, -ySize - 1 + 0.5f, z + 0.5f)].CellType = CellType.Void;
                 }
             }
             ySize++;
@@ -204,14 +218,17 @@ public class MyGridSystem : Singleton
             {
                 for (int y = -ySize; y <= ySize; y++)
                 {
-                    gridCells[new Vector3(x + 0.5f, y + 0.5f, zSize + 1 + 0.5f)] = CellType.Void;
-                    gridCells[new Vector3(x + 0.5f, y + 0.5f, -zSize - 1 + 0.5f)] = CellType.Void;
+                    gridCells[new Vector3(x + 0.5f, y + 0.5f, zSize + 1 + 0.5f)].CellType = CellType.Void;
+                    gridCells[new Vector3(x + 0.5f, y + 0.5f, -zSize - 1 + 0.5f)].CellType = CellType.Void;
                 }
             }
             zSize++;
         }
     }
 
+    /// <summary>
+    /// Extend Grid by 1 unit
+    /// </summary>
     public void ExtendGrid()
     {
         xSize++;
@@ -223,14 +240,14 @@ public class MyGridSystem : Singleton
         {
             for (int z = -zSize; z <= zSize; z++)
             {
-                gridCells[new Vector3(xSize, y, z)] = CellType.Void;
+                gridCells[new Vector3(xSize, y, z)].CellType = CellType.Void;
             }
         }
         for (int y = -ySize; y <= ySize; y++)
         {
             for (int z = -zSize; z <= zSize; z++)
             {
-                gridCells[new Vector3(-xSize, y, z)] = CellType.Void;
+                gridCells[new Vector3(-xSize, y, z)].CellType = CellType.Void;
             }
         }
 
@@ -239,14 +256,14 @@ public class MyGridSystem : Singleton
         {
             for (int z = -zSize; z <= zSize; z++)
             {
-                gridCells[new Vector3(x, ySize, z)] = CellType.Void;
+                gridCells[new Vector3(x, ySize, z)].CellType = CellType.Void;
             }
         }
         for (int x = -xSize; x <= xSize; x++)
         {
             for (int z = -zSize; z <= zSize; z++)
             {
-                gridCells[new Vector3(x, -ySize, z)] = CellType.Void;
+                gridCells[new Vector3(x, -ySize, z)].CellType = CellType.Void;
             }
         }
         
@@ -256,20 +273,23 @@ public class MyGridSystem : Singleton
         {
             for (int y = -ySize; y <= ySize; y++)
             {
-                gridCells[new Vector3(x, y, zSize)] = CellType.Void;
+                gridCells[new Vector3(x, y, zSize)].CellType = CellType.Void;
             }
         }
         for (int x = -xSize; x <= xSize; x++)
         {
             for (int y = -ySize; y <= ySize; y++)
             {
-                gridCells[new Vector3(x, y, -zSize - 1)] = CellType.Void;
+                gridCells[new Vector3(x, y, -zSize - 1)].CellType = CellType.Void;
             }
         }
         
     }
 
-
+    /// <summary>
+    /// Draw grid on scene
+    /// </summary>
+    #region Draw Grid
 
     /*void OnDrawGizmos()
     {
@@ -303,9 +323,9 @@ public class MyGridSystem : Singleton
     [Button("Show Room")]
     void DrawRoom()
     {
-        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+        foreach (KeyValuePair<Vector3, Cell> item in gridCells)
         {
-            if(item.Value == CellType.Room)
+            if(item.Value.CellType == CellType.Room)
             {
                 Vector3 coord = item.Key;
                 Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.white, 1f);
@@ -318,9 +338,9 @@ public class MyGridSystem : Singleton
     [Button("Show Stair")]
     void DrawStair()
     {
-        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+        foreach (KeyValuePair<Vector3, Cell> item in gridCells)
         {
-            if (item.Value == CellType.Stair)
+            if (item.Value.CellType == CellType.Stair)
             {
                 Vector3 coord = item.Key;
                 Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.red, 1f);
@@ -334,9 +354,9 @@ public class MyGridSystem : Singleton
     [Button("Show Collidor")]
     void DrawCollidor()
     {
-        foreach (KeyValuePair<Vector3, CellType> item in gridCells)
+        foreach (KeyValuePair<Vector3, Cell> item in gridCells)
         {
-            if (item.Value == CellType.Collidor)
+            if (item.Value.CellType == CellType.Collidor)
             {
                 Vector3 coord = item.Key;
                 Debug.DrawLine(new Vector3(coord.x, coord.y, coord.z), new Vector3(coord.x + 1, coord.y, coord.z), Color.red, 1f);
@@ -346,15 +366,17 @@ public class MyGridSystem : Singleton
 
         }
     }
+    #endregion  
 
-    public Dictionary<Vector3, CellType> GetGridCells()
+
+    public Dictionary<Vector3, Cell> GetGridCells()
     {
         return gridCells;
     }
 
-    public void SetCell(Vector3 pos, CellType type)
+    public void SetCellType(Vector3 pos, CellType type)
     {
-        gridCells[pos] = type;
+        gridCells[pos].CellType = type;
     }
     
     /// <summary>
@@ -362,6 +384,6 @@ public class MyGridSystem : Singleton
     /// </summary>
     public void ResetGrid()
     {
-        gridCells = new Dictionary<Vector3,CellType>(initialCells);
+        gridCells = new Dictionary<Vector3,Cell>(initialCells);
     }
 }

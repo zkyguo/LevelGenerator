@@ -5,19 +5,28 @@ using System.Linq;
 using UnityEngine;
 using static UnityEditor.Progress;
 
+public class Door
+{
+    Cell doorCell;
+
+    public Door(Cell doorCell)
+    {
+        this.doorCell = doorCell;
+    }   
+}
+
 public class Room : MonoBehaviour
 {
     List<GameObject> assets = new List<GameObject>();
-    [SerializeField]
     Vector3 CentrePosition;
-
-    public List<Vector3> occupiedCells = new List<Vector3>();
-    [SerializeField]
+    List<Vector3> occupiedCells = new List<Vector3>();
     List<Vector3> boundaryCells = new List<Vector3>();
-
     Vector3Int Size = new Vector3Int();
     String Name;
-    [SerializeField]
+
+    List<Cell> Cells = new List<Cell>();
+    List<Door> doorCells = new List<Door>();
+
     MyGridSystem grid;
 
     public void setRoom(Vector3Int _size, List<Vector3> allNodeInside)
@@ -26,10 +35,7 @@ public class Room : MonoBehaviour
         Size = _size;
         occupiedCells = allNodeInside;
         Name = transform.name;
-        
-        //GetRandomBoundaryCell();
     }
-
 
     public Vector3 GetRandomBoundaryCell()
     {
@@ -44,6 +50,8 @@ public class Room : MonoBehaviour
         // Find all boundary cells
         foreach (var cell in occupiedCells)
         {
+            Cell roomCell = new Cell(cell, CellType.Room);
+            Cells.Add(roomCell);
             // Check the six neighboring cells
             Vector3[] neighbors = new Vector3[]
             {
@@ -57,7 +65,8 @@ public class Room : MonoBehaviour
             {
                 if (grid.GetGridCells().ContainsKey(neighbor) && !occupiedCells.Contains(neighbor))
                 {
-                    boundaryCells.Add(neighbor);
+                    boundaryCells.Add(neighbor);          
+                    doorCells.Add(new Door(roomCell));
                 }
             }
         }

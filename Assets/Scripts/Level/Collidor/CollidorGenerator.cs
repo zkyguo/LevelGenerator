@@ -2,12 +2,27 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Collidor : MonoBehaviour
+{
+    Vector3 position;
+}
+
+public class Hallway : Collidor
+{
+    Cell cell;
+
+}
+
+public class Stair : Collidor
+{
+    List<Cell> cells;
+}
+
 public class CollidorGenerator : Singleton
 {
-
-
     private Dictionary<GameObject, GameObject> connectedRoom = new Dictionary<GameObject, GameObject>();
     private List<List<Vector3>> PathList = new List<List<Vector3>>();
+    private List<Collidor> allCollidor = new List<Collidor>();
     [SerializeField]
     MyGridSystem grid;
 
@@ -49,19 +64,17 @@ public class CollidorGenerator : Singleton
             {
                 for (int i = 0; i < road.Count; i++)
                 {
-                    if (grid.GetGridCells()[road[i]] == CellType.Collidor)
+                    if (grid.GetGridCells()[road[i]].CellType == CellType.Collidor)
                     {
                         allCollidors.Add(Instantiate(CollidorPrefab, road[i], Quaternion.identity));
                     }
-                    else if (grid.GetGridCells()[road[i]] == CellType.Stair)
+                    else if (grid.GetGridCells()[road[i]].CellType == CellType.Stair)
                     {
 
                         Vector3 normal = Vector3.Cross(road[i + 1] - road[i], road[i + 2] - road[i]).normalized;
                         Quaternion rotation = Quaternion.LookRotation(normal);
                         allCollidors.Add(Instantiate(StairPrefab, road[i] + (road[i + 3] - road[i]) / 2, rotation));
                         i = i + 3;
-
-
 
                     }
                 }

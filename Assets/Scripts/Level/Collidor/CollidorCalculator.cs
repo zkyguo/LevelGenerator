@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class CollidorCalculator
 {
-    public static List<Vector3> FindPath(Room roomA, Room roomB, Dictionary<Vector3, CellType> gridCells)
+    public static List<Vector3> FindPath(Room roomA, Room roomB, Dictionary<Vector3, Cell> gridCells)
     {
         int nbTry = 5;
         while (nbTry != 0)
@@ -96,7 +96,7 @@ public static class CollidorCalculator
         return null;
     }
 
-    private static List<Vector3> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 start, Vector3 goal, Dictionary<Vector3, CellType> gridCells, Dictionary<Vector3, HashSet<Vector3>> pathSoFar)
+    private static List<Vector3> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 start, Vector3 goal, Dictionary<Vector3, Cell> gridCells, Dictionary<Vector3, HashSet<Vector3>> pathSoFar)
     {
         HashSet<Vector3> path = new HashSet<Vector3>();
         Vector3 current = goal;
@@ -110,20 +110,20 @@ public static class CollidorCalculator
                 
                 List<Vector3> stair = FindStair(NextPosition, current, gridCells);
                 path.Add(current);
-                gridCells[current] = CellType.Stair;
+                gridCells[current].CellType = CellType.Stair;
                 path.Add(stair[1]);
                 path.Add(stair[2]);
-                gridCells[stair[1]] = CellType.Stair;
-                gridCells[stair[2]] = CellType.Stair;
+                gridCells[stair[1]].CellType = CellType.Stair;
+                gridCells[stair[2]].CellType = CellType.Stair;
                 path.Add(NextPosition);
-                gridCells[NextPosition] = CellType.Stair;
+                gridCells[NextPosition].CellType = CellType.Stair;
                 current = cameFrom[NextPosition];
                 
             }
             else
             {
                 path.Add(current);
-                gridCells[current] = CellType.Collidor;
+                gridCells[current].CellType = CellType.Collidor;
                 current = cameFrom[current];
             }
             
@@ -132,7 +132,7 @@ public static class CollidorCalculator
         if(!path.Contains(start))
         {
             path.Add(start); // optional
-            gridCells[start] = CellType.Collidor;
+            gridCells[start].CellType = CellType.Collidor;
         }
 
         path.Reverse();
@@ -145,7 +145,7 @@ public static class CollidorCalculator
         return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) + Mathf.Abs(a.z - b.z);
     }
 
-    private static IEnumerable<Vector3> GetNeighbors(Vector3 current, Dictionary<Vector3, CellType> grid)
+    private static IEnumerable<Vector3> GetNeighbors(Vector3 current, Dictionary<Vector3, Cell> grid)
     {
         // Return the six neighboring cells
         Vector3[] neighbors = new Vector3[]
@@ -170,28 +170,28 @@ public static class CollidorCalculator
            
             if (grid.ContainsKey(next))
             {
-                CellType type = grid[next];
+                CellType type = grid[next].CellType;
                 if (type == CellType.Void || type == CellType.Collidor) yield return next;
             }
         }
     }
 
-    private static List<Vector3> FindStair(Vector3 current, Vector3 next, Dictionary<Vector3, CellType> gridCells)
+    private static List<Vector3> FindStair(Vector3 current, Vector3 next, Dictionary<Vector3, Cell> gridCells)
     {
         HashSet<Vector3> stairCell = new HashSet<Vector3>();
 
         Vector3Int direction = Vector3Int.FloorToInt(next - current);
 
-        if (gridCells[next] != CellType.Void) return null;
+        if (gridCells[next].CellType != CellType.Void) return null;
 
         Vector3 directionX = new Vector3(current.x + direction.x, current.y, current.z);
-        if (gridCells.ContainsKey(directionX) && gridCells[directionX] != CellType.Void) return null;
+        if (gridCells.ContainsKey(directionX) && gridCells[directionX].CellType != CellType.Void) return null;
 
         Vector3 directionY = new Vector3(current.x, current.y + direction.y, current.z);
-        if (gridCells.ContainsKey(directionY) && gridCells[directionY] != CellType.Void) return null;
+        if (gridCells.ContainsKey(directionY) && gridCells[directionY].CellType != CellType.Void) return null;
 
         Vector3 directionZ = new Vector3(current.x, current.y, current.z + direction.z);
-        if (gridCells.ContainsKey(directionZ) &&  gridCells[directionZ] != CellType.Void) return null;
+        if (gridCells.ContainsKey(directionZ) &&  gridCells[directionZ].CellType != CellType.Void) return null;
 
         stairCell.Add(current);
         stairCell.Add(directionX);
