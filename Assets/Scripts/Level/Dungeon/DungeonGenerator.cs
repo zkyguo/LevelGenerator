@@ -28,7 +28,7 @@ public class DungeonGenerator : Singleton
     public Vector3Int boundsRadius;
     public int maxIteration = 10;
 
-    private List<GameObject> generatedCubes = new List<GameObject>();
+    private List<GameObject> generatedRooms = new List<GameObject>();
     [SerializeField]
     private MyGridSystem grid; //TODO : change to auto get Grid or Put grid to static
     [SerializeField]
@@ -42,6 +42,7 @@ public class DungeonGenerator : Singleton
         PlaceRandomRoom();
         path?.GeneratePath();
         Collidor?.GenerateCollidors();
+        ApplyRulesRoom();
     }
 
     private void PlaceRandomRoom()
@@ -83,7 +84,7 @@ public class DungeonGenerator : Singleton
                 Bounds newBounds = new Bounds(newPosition, newScale);
                 newBounds.Expand(minDistance);  // Expand the bounds of the new cube before checking intersection
 
-                foreach (GameObject cube in generatedCubes)
+                foreach (GameObject cube in generatedRooms)
                 {
                     Bounds cubeBounds = new Bounds(cube.transform.position, cube.transform.localScale);
                     if (newBounds.Intersects(cubeBounds))
@@ -99,8 +100,8 @@ public class DungeonGenerator : Singleton
             if (validPosition)
             {
                 GameObject room = grid.SetObjectAt(cubePrefab, newScale, newPosition);
-                room.name = "Room" + generatedCubes.Count();
-                generatedCubes.Add(room);
+                room.name = "Room" + generatedRooms.Count();
+                generatedRooms.Add(room);
             }
         }
     }
@@ -109,12 +110,12 @@ public class DungeonGenerator : Singleton
 
     private void Clear()
     {
-        foreach (var room in generatedCubes)
+        foreach (var room in generatedRooms)
         {
             DestroyImmediate(room);
         }
-        
-        generatedCubes.Clear();
+
+        generatedRooms.Clear();
     }
 
     private void AddRoomsInScene()
@@ -123,7 +124,7 @@ public class DungeonGenerator : Singleton
 
         foreach (GameObject obj in objects)
         {
-            generatedCubes.Add(obj);
+            generatedRooms.Add(obj);
         }
     }
 
@@ -131,6 +132,14 @@ public class DungeonGenerator : Singleton
     {
         grid.Clear();
         grid.Initialize(boundsRadius);
+    }
+
+    private void ApplyRulesRoom()
+    {
+        foreach (var room in generatedRooms)
+        {
+            room.GetComponent<Room>().ApplyRules();
+        }
     }
 }
 

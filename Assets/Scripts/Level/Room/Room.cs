@@ -2,7 +2,9 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Door
 {
@@ -24,9 +26,13 @@ public class Room : SerializedMonoBehaviour
     String Name;
 
     Dictionary<Vector3, Cell> Cells = new Dictionary<Vector3, Cell>();
+    /// <summary>
+    /// <OutsidePosition, Outside-Inside direction>
+    /// </summary>
     Dictionary<Vector3, Vector3> doorCells = new Dictionary<Vector3, Vector3>();
     Dictionary<Vector3, Cell> allBoundary = new Dictionary<Vector3, Cell>();
     public HashSet<RoomPlacementRule> allRules = new HashSet<RoomPlacementRule>();
+    HashSet<int> allIndex = new HashSet<int>();
 
     MyGridSystem grid;
 
@@ -36,20 +42,36 @@ public class Room : SerializedMonoBehaviour
         Size = _size;
         occupiedCells = allNodeInside;
         Name = transform.name;
-        GetRandomBoundaryCell();
-        ApplyRules();
     }
 
-    public Vector3 GetRandomBoundaryCell()
+    public void UpdateDoorCells(Vector3 doorPosition, Vector3 doorDirection)
     {
+        try
+        {
+            doorCells.Add(doorPosition, doorDirection);
+        }
+        catch
+        {
+            
+        }
+        
+    }
 
+    public CollidorDirection GetRandomBoundaryCell()
+    {
         // Randomly select one of the boundary cells
         if (allBoundary.Count > 0)
         {
             int randomIndex = UnityEngine.Random.Range(0, allBoundary.Count);
+            while (!allIndex.Add(randomIndex))
+            {
+                randomIndex = UnityEngine.Random.Range(0, allBoundary.Count);
+            }
             KeyValuePair<Vector3, Cell> keyValuePair = allBoundary.ElementAt(randomIndex);
-            doorCells.Add(keyValuePair.Value.Position, keyValuePair.Key - keyValuePair.Value.Position);
-            return keyValuePair.Key;
+            var collidorAndDirection = GetVectors();
+            collidorAndDirection.CollidorStart = keyValuePair.Key;
+            collidorAndDirection.DoorDirection = keyValuePair.Key - keyValuePair.Value.Position;
+            return collidorAndDirection;
         }
 
         // Find all boundary cells
@@ -78,16 +100,19 @@ public class Room : SerializedMonoBehaviour
         if (allBoundary.Count > 0)
         {
             int randomIndex = UnityEngine.Random.Range(0, allBoundary.Count);
+            allIndex.Add(randomIndex);
             KeyValuePair<Vector3, Cell> keyValuePair = allBoundary.ElementAt(randomIndex);
-            doorCells.Add(keyValuePair.Value.Position, keyValuePair.Key - keyValuePair.Value.Position);
-            return keyValuePair.Key;
+            var collidorAndDirection = GetVectors();
+            collidorAndDirection.CollidorStart = keyValuePair.Key;
+            collidorAndDirection.DoorDirection = keyValuePair.Key - keyValuePair.Value.Position;
+            return collidorAndDirection;
         }
 
-        return new Vector3();
+        return new CollidorDirection();
 
     }
 
-    private void ApplyRules()
+    public void ApplyRules()
     {
         foreach (var Cell in Cells)
         {
@@ -165,23 +190,40 @@ public class Room : SerializedMonoBehaviour
         return CentrePosition;
     }
 
-    /*private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        foreach (var cell in boundaryCells)
+        foreach (var cell in doorCells)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(cell, 0.2f);
+            Gizmos.DrawSphere(cell.Key, 0.2f);
         }
-    }*/
+    }
 
 
     private void OnDestroy()
     {
+        Cells = null;
         assets = null;
         occupiedCells = null;
         allBoundary = null;
         doorCells = null;
         allRules = null;
+        allIndex = null;
+    }
+
+    private CollidorDirection GetVectors()
+    {
+        Vector3 vector1 = new Vector3(1, 1, 1);
+        Vector3 vector2 = new Vector3(2, 2, 2);
+        return new CollidorDirection { CollidorStart = vector1, DoorDirection = vector2 };
     }
 
 }
+
+public struct CollidorDirection
+{
+    public Vector3 CollidorStart { get; set; }
+    public Vector3 DoorDirection { get; set; }
+}
+
+

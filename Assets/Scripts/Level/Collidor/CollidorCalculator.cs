@@ -4,13 +4,16 @@ using UnityEngine;
 
 public static class CollidorCalculator
 {
-    public static List<Vector3> FindPath(Room roomA, Room roomB, Dictionary<Vector3, Cell> gridCells)
+    public static List<CollidorCell> FindPath(Room roomA, Room roomB, Dictionary<Vector3, Cell> gridCells)
     {
         int nbTry = 5;
         while (nbTry != 0)
         {
-            Vector3 start = roomA.GetRandomBoundaryCell();
-            Vector3 goal = roomB.GetRandomBoundaryCell();
+            var directionA = roomA.GetRandomBoundaryCell();
+            var directionB = roomB.GetRandomBoundaryCell();
+
+            Vector3 start = directionA.CollidorStart;
+            Vector3 goal = directionB.CollidorStart;
 
             Dictionary<Vector3, Vector3> cameFrom = new Dictionary<Vector3, Vector3>();
             Dictionary<Vector3, float> costSoFar = new Dictionary<Vector3, float>();
@@ -30,8 +33,10 @@ public static class CollidorCalculator
 
                 if (current == goal)
                 {
+                    roomA.UpdateDoorCells(directionA.CollidorStart - directionA.DoorDirection, directionA.DoorDirection);
+                    roomB.UpdateDoorCells(directionB.CollidorStart - directionB.DoorDirection, directionB.DoorDirection);
                     // We found a path!
-                    return ReconstructPath(cameFrom, start, goal, gridCells, pathSoFar);
+                    return ReconstructPath(cameFrom, start, goal, gridCells, directionA, directionB);
                 }
 
                 // Check all neighbors
@@ -96,42 +101,82 @@ public static class CollidorCalculator
         return null;
     }
 
-    private static List<Vector3> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 start, Vector3 goal, Dictionary<Vector3, Cell> gridCells, Dictionary<Vector3, HashSet<Vector3>> pathSoFar)
+    private static List<CollidorCell> ReconstructPath(Dictionary<Vector3, Vector3> cameFrom, Vector3 start, Vector3 goal, Dictionary<Vector3, Cell> gridCells, CollidorDirection Startdirection, CollidorDirection GoalDirection)
     {
-        HashSet<Vector3> path = new HashSet<Vector3>();
+        HashSet<CollidorCell> path = new HashSet<CollidorCell>();
         Vector3 current = goal;
         Vector3 NextPosition = new Vector3();
+        CollidorCell lastCell = new CollidorCell(current,CellType.Void);
 
         while (current != start)
         {
             NextPosition = cameFrom[current];
             if (current.y != NextPosition.y)
-            {               
-                
+            {
+
                 List<Vector3> stair = FindStair(NextPosition, current, gridCells);
-                path.Add(current);
+                //Create collidor cell
+                CollidorCell currentCell = new CollidorCell(current, CellType.Stair);   
+                CollidorCell stair1 = new CollidorCell(stair[1], CellType.Stair);
+                CollidorCell stair2 = new CollidorCell(stair[2], CellType.Stair);
+                CollidorCell nextCell = new CollidorCell(NextPosition, CellType.Stair);
+               
+
+                //Update previous and next direction
+                currentCell.previousDirection = lastCell.nextDirection; 
+                if (current == goal)
+                {
+                    currentCell.previousDirection = GoalDirection.DoorDirection;
+                }
+                nextCell.nextDirection = NextPosition - cameFrom[NextPosition];
+                if(current == start)
+                {
+                    currentCell.nextDirection = Startdirection.DoorDirection;
+                }
+
+                StairCell staircell = new StairCell((current + NextPosition) / 2, CellType.Stair, new List<CollidorCell> { currentCell, stair1, stair2, nextCell });
+                //Add to path
+                path.Add(staircell);
+    
+                //Update grid
                 gridCells[current].CellType = CellType.Stair;
-                path.Add(stair[1]);
-                path.Add(stair[2]);
                 gridCells[stair[1]].CellType = CellType.Stair;
-                gridCells[stair[2]].CellType = CellType.Stair;
-                path.Add(NextPosition);
+                gridCells[stair[2]].CellType = CellType.Stair;          
                 gridCells[NextPosition].CellType = CellType.Stair;
+
                 current = cameFrom[NextPosition];
-                
+                lastCell = nextCell;
             }
             else
             {
-                path.Add(current);
+                CollidorCell currentCell = new CollidorCell(current, CellType.Collidor);
+
+                //Update previous and next direction
+                currentCell.previousDirection = lastCell.nextDirection;
+                if (current == goal)
+                {
+                    currentCell.previousDirection = GoalDirection.DoorDirection;
+                }
+                currentCell.nextDirection = NextPosition - cameFrom[NextPosition];
+                if (current == start)
+                {
+                    currentCell.nextDirection = Startdirection.DoorDirection;
+                }
+
+                path.Add(currentCell);
                 gridCells[current].CellType = CellType.Collidor;
                 current = cameFrom[current];
+                lastCell = currentCell;
             }
             
             
         }
-        if(!path.Contains(start))
+        if(path.FirstOrDefault(a => a.Position == start) == null)
         {
-            path.Add(start); // optional
+            CollidorCell currentCell = new CollidorCell(current, CellType.Collidor);
+            currentCell.previousDirection = lastCell.nextDirection;
+            currentCell.nextDirection = Startdirection.DoorDirection;
+            path.Add(currentCell); // optional
             gridCells[start].CellType = CellType.Collidor;
         }
 

@@ -1,27 +1,24 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Collidor : MonoBehaviour
+
+
+public class Collidor : SerializedMonoBehaviour
 {
-    List<ICollidorCell> cells = new List<ICollidorCell>();
-}
+    public HashSet<CollidorRoom> Collidors = new HashSet<CollidorRoom>();
 
-interface ICollidorCell 
-{
-    List<GameObject> Asset { get; set; }
-}
+    public void ApplyRules()
+    {
+        foreach (var cell in Collidors)
+        {
+            cell.ApplyRules();
+        }
+    }
 
-public class Hallway : MonoBehaviour, ICollidorCell
-{
-    Cell cell;
-
-    public List<GameObject> Asset { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
-}
-
-public class Stair : MonoBehaviour, ICollidorCell
-{
-    List<Cell> cells;
-
-    public List<GameObject> Asset { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+    public void AddCell(CollidorRoom cell)
+    {
+        Collidors.Add(cell);
+    }
 }
