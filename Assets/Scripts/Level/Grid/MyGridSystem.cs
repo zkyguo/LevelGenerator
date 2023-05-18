@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
@@ -32,11 +33,13 @@ public class MyGridSystem : Singleton
     [SerializeField]
     private int zSize;
 
-    /// <summary>
-    /// <position, is cell void>
-    /// </summary>
+    public static int Unit = 1;
+
     Dictionary<Vector3, Cell> gridCells = new Dictionary<Vector3, Cell>();
     Dictionary<Vector3, Cell> initialCells = new Dictionary<Vector3, Cell>();
+
+    List<Room> allRoom = new List<Room>();
+    List<Collidor> allCollidor = new List<Collidor>();
 
     #region Public
 
@@ -54,7 +57,7 @@ public class MyGridSystem : Singleton
             ExtendGrid(worldPosition, size); //Check if need extend grid
             Vector3 offset = new Vector3(size.x % 2 == 0 ? 0 : 0.5f, size.y % 2 == 0 ? 0 : 0.5f, size.z % 2 == 0 ? 0 : 0.5f);
             GameObject gameObject = Instantiate(prefab, worldPosition + offset, Quaternion.identity);
-            gameObject.transform.localScale = size;
+            //gameObject.transform.localScale = size;
             gameObject.GetComponent<Room>().setRoom(size, PlaceObject(worldPosition, size, gameObject.GetComponent<Room>()));
             return gameObject;
         }
@@ -141,6 +144,7 @@ public class MyGridSystem : Singleton
                     }
                     cells.Add(WorldToGrid(cell));
                     gridCells[WorldToGrid(cell)].CellType = CellType.Room;
+                    allRoom.Add(room);
                 }
             }
         }

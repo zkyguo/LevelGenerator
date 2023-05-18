@@ -2,22 +2,6 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Collidor : MonoBehaviour
-{
-    Vector3 position;
-}
-
-public class Hallway : Collidor
-{
-    Cell cell;
-
-}
-
-public class Stair : Collidor
-{
-    List<Cell> cells;
-}
-
 public class CollidorGenerator : Singleton
 {
     private Dictionary<GameObject, GameObject> connectedRoom = new Dictionary<GameObject, GameObject>();

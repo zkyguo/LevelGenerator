@@ -40,8 +40,8 @@ public class DungeonGenerator : Singleton
     private void Generate()
     {
         PlaceRandomRoom();
-        path.GeneratePath();
-        Collidor.GenerateCollidors();
+        path?.GeneratePath();
+        Collidor?.GenerateCollidors();
     }
 
     private void PlaceRandomRoom()

@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7032403683953786618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7994452105185601029}
+  - component: {fileID: 8725013473447750536}
+  m_Layer: 0
+  m_Name: Room
+  m_TagString: Room
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7994452105185601029
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7032403683953786618}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8725013473447750536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7032403683953786618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc5570a24087adf4ab22523923aa0893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: e9dcee31e048f494584af885c85a32b0, type: 2}
+    - {fileID: 11400000, guid: ad7f8d4379e971a4b9143bf5303d871c, type: 2}
+    - {fileID: 11400000, guid: 4a88723a7be396a42a9d6c2a80b24e03, type: 2}
+    - {fileID: 11400000, guid: f1dc00001f384614da85ebbc216a63a8, type: 2}
+    - {fileID: 11400000, guid: 39abc57c1fd95484cb3aaaae4cd50c1d, type: 2}
+    - {fileID: 11400000, guid: 8d39cb2edf350534db20607c7ff6103f, type: 2}
+    - {fileID: 11400000, guid: 55f3d11c9d1946d4d90363b5fa691154, type: 2}
+    - {fileID: 11400000, guid: b4bd754327e82664f9bf01e55f43313d, type: 2}
+    - {fileID: 11400000, guid: e7d2f7cabff69d64c900eaa88fbc79b9, type: 2}
+    - {fileID: 11400000, guid: f26eecedd93a0d14eb951f947c14401c, type: 2}
+    - {fileID: 11400000, guid: 3423be2f57838124c94158ea00b82ece, type: 2}
+    - {fileID: 11400000, guid: c115900de892e2f49b5f62427f69c1fc, type: 2}
+    - {fileID: 11400000, guid: dd77ba7864639e34badbc3644862415c, type: 2}
+    - {fileID: 11400000, guid: cae6723b633382c49b7ff136085f42c9, type: 2}
+    - {fileID: 11400000, guid: 4257eb0f835099d42a18c80d78bc16d2, type: 2}
+    - {fileID: 11400000, guid: f821c59bb2807ef4a9e5be32aff4615e, type: 2}
+    - {fileID: 11400000, guid: 0e392f257c2d85d448315138dc74fed8, type: 2}
+    - {fileID: 11400000, guid: 4dc7d42a785be044ebe8f65cf4e3cfc3, type: 2}
+    - {fileID: 11400000, guid: cb0cce988cc57564f8401530a0de030d, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: allRules
+      Entry: 7
+      Data: 0|System.Collections.Generic.HashSet`1[[RoomPlacementRule, Assembly-CSharp]],
+        System.Core
+    - Name: 
+      Entry: 12
+      Data: 19
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 10
+      Data: 6
+    - Name: 
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 10
+      Data: 10
+    - Name: 
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 10
+      Data: 12
+    - Name: 
+      Entry: 10
+      Data: 13
+    - Name: 
+      Entry: 10
+      Data: 14
+    - Name: 
+      Entry: 10
+      Data: 15
+    - Name: 
+      Entry: 10
+      Data: 16
+    - Name: 
+      Entry: 10
+      Data: 17
+    - Name: 
+      Entry: 10
+      Data: 18
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

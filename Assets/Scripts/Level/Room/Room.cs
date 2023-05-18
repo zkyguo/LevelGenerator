@@ -1,9 +1,8 @@
+using Sirenix.OdinInspector;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Door
 {
@@ -12,20 +11,22 @@ public class Door
     public Door(Cell doorCell)
     {
         this.doorCell = doorCell;
-    }   
+    }
 }
 
-public class Room : MonoBehaviour
+public class Room : SerializedMonoBehaviour
 {
     List<GameObject> assets = new List<GameObject>();
     Vector3 CentrePosition;
     List<Vector3> occupiedCells = new List<Vector3>();
-    List<Vector3> boundaryCells = new List<Vector3>();
+
     Vector3Int Size = new Vector3Int();
     String Name;
 
-    List<Cell> Cells = new List<Cell>();
-    List<Door> doorCells = new List<Door>();
+    Dictionary<Vector3, Cell> Cells = new Dictionary<Vector3, Cell>();
+    Dictionary<Vector3, Vector3> doorCells = new Dictionary<Vector3, Vector3>();
+    Dictionary<Vector3, Cell> allBoundary = new Dictionary<Vector3, Cell>();
+    public HashSet<RoomPlacementRule> allRules = new HashSet<RoomPlacementRule>();
 
     MyGridSystem grid;
 
@@ -35,23 +36,27 @@ public class Room : MonoBehaviour
         Size = _size;
         occupiedCells = allNodeInside;
         Name = transform.name;
+        GetRandomBoundaryCell();
+        ApplyRules();
     }
 
     public Vector3 GetRandomBoundaryCell()
     {
 
         // Randomly select one of the boundary cells
-        if (boundaryCells.Count > 0)
+        if (allBoundary.Count > 0)
         {
-            int randomIndex = UnityEngine.Random.Range(0, boundaryCells.Count);
-            return boundaryCells[randomIndex];
+            int randomIndex = UnityEngine.Random.Range(0, allBoundary.Count);
+            KeyValuePair<Vector3, Cell> keyValuePair = allBoundary.ElementAt(randomIndex);
+            doorCells.Add(keyValuePair.Value.Position, keyValuePair.Key - keyValuePair.Value.Position);
+            return keyValuePair.Key;
         }
 
         // Find all boundary cells
         foreach (var cell in occupiedCells)
         {
             Cell roomCell = new Cell(cell, CellType.Room);
-            Cells.Add(roomCell);
+            Cells.Add(cell, roomCell);
             // Check the six neighboring cells
             Vector3[] neighbors = new Vector3[]
             {
@@ -65,19 +70,88 @@ public class Room : MonoBehaviour
             {
                 if (grid.GetGridCells().ContainsKey(neighbor) && !occupiedCells.Contains(neighbor))
                 {
-                    boundaryCells.Add(neighbor);          
-                    doorCells.Add(new Door(roomCell));
+                    allBoundary.Add(neighbor, roomCell);
                 }
             }
         }
         // Randomly select one of the boundary cells
-        if (boundaryCells.Count > 0)
+        if (allBoundary.Count > 0)
         {
-            int randomIndex = UnityEngine.Random.Range(0, boundaryCells.Count);
-            return boundaryCells[randomIndex];
+            int randomIndex = UnityEngine.Random.Range(0, allBoundary.Count);
+            KeyValuePair<Vector3, Cell> keyValuePair = allBoundary.ElementAt(randomIndex);
+            doorCells.Add(keyValuePair.Value.Position, keyValuePair.Key - keyValuePair.Value.Position);
+            return keyValuePair.Key;
         }
 
         return new Vector3();
+
+    }
+
+    private void ApplyRules()
+    {
+        foreach (var Cell in Cells)
+        {
+            CellType topType = CellType.Void;
+            CellType bottomType = CellType.Void;
+            CellType leftType = CellType.Void;
+            CellType rightType = CellType.Void;
+            CellType frontType = CellType.Void;
+            CellType backType = CellType.Void;
+
+            if (Cells.ContainsKey(Cell.Key + Vector3Int.up)) topType = CellType.Room;
+            if (Cells.ContainsKey(Cell.Key + Vector3Int.down)) bottomType = CellType.Room;
+            if (Cells.ContainsKey(Cell.Key + Vector3Int.left)) leftType = CellType.Room;
+            if (Cells.ContainsKey(Cell.Key + Vector3Int.right)) rightType = CellType.Room;
+            if (Cells.ContainsKey(Cell.Key + Vector3Int.forward)) frontType = CellType.Room;
+            if (Cells.ContainsKey(Cell.Key + Vector3Int.back)) backType = CellType.Room;
+
+            if (doorCells.ContainsKey(Cell.Key))
+            {
+                foreach (RoomPlacementRule rule in allRules)
+                {
+                    RoomDoorRule doorRule = rule as RoomDoorRule;
+                    if (doorRule != null)
+                    {
+                        if (topType == rule.topType &&
+                     bottomType == rule.bottomType &&
+                     leftType == rule.leftType &&
+                     rightType == rule.rightType &&
+                     frontType == rule.frontType &&
+                     backType == rule.backType &&
+                     doorRule.direction == doorCells[Cell.Key])
+                        {
+                            Quaternion rotation = Quaternion.Euler(doorRule.rotation);
+                            GameObject gameObject = Instantiate(doorRule.prefab, Cell.Key, rotation, this.gameObject.transform);
+                            gameObject.name = doorRule.name;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (RoomPlacementRule rule in allRules)
+                {
+                    RoomDoorRule doorRule = rule as RoomDoorRule;
+                    if (doorRule == null)
+                    {
+                        if (topType == rule.topType &&
+                         bottomType == rule.bottomType &&
+                         leftType == rule.leftType &&
+                         rightType == rule.rightType &&
+                         frontType == rule.frontType &&
+                         backType == rule.backType)
+                        {
+                            Quaternion rotation = Quaternion.Euler(rule.rotation);
+                            GameObject gameObject = Instantiate(rule.prefab, Cell.Key, rotation, this.gameObject.transform);
+                            gameObject.name = rule.name;
+                        }
+                    }
+
+
+
+                }
+            }
+        }
 
     }
 
@@ -105,7 +179,9 @@ public class Room : MonoBehaviour
     {
         assets = null;
         occupiedCells = null;
-        boundaryCells = null;
+        allBoundary = null;
+        doorCells = null;
+        allRules = null;
     }
 
 }
