@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,24 +7,26 @@ public class Hallway : CollidorRoom
 
     public void InitiateHallway(CollidorCell _cell)
     {
-         cell = _cell;
-        position = _cell.Position;
+        cell = _cell;
     }
 
     public override void ApplyRules()
     {
-        foreach (var rule in rule)
+        foreach (var rule in rules)
         {
-            if(rule.directions.Contains(cell.nextDirection) && rule.directions.Contains(cell.previousDirection))
+
+            foreach (List<Vector3> directions in rule.directions)
             {
-                if(cell.nextDirection.x != 0)
+                if (cell.previousDirection == directions[0] && cell.nextDirection == directions[1])
                 {
                     Quaternion rotation = Quaternion.Euler(rule.rotation);
                     GameObject gameObject = Instantiate(rule.prefab, cell.Position, rotation, this.gameObject.transform);
                     gameObject.name = rule.name;
+                    continue;
                 }
             }
         }
+
     }
 
     public CollidorCell Cell { get => cell; set => cell = value; }

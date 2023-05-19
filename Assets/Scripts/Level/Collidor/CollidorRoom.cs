@@ -9,7 +9,7 @@ public abstract class CollidorRoom : SerializedMonoBehaviour
 {
 
     public Vector3 position;
-    public HashSet<BaseCollidorRule> rule = new HashSet<BaseCollidorRule>();
+    public HashSet<BaseCollidorRule> rules = new HashSet<BaseCollidorRule>();
 
     public abstract void ApplyRules();
 

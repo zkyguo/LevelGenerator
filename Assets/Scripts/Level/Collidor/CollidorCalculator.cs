@@ -128,10 +128,10 @@ public static class CollidorCalculator
                 {
                     currentCell.previousDirection = GoalDirection.DoorDirection;
                 }
-                nextCell.nextDirection = NextPosition - cameFrom[NextPosition];
+                nextCell.nextDirection = cameFrom[NextPosition] - NextPosition;
                 if(current == start)
                 {
-                    currentCell.nextDirection = Startdirection.DoorDirection;
+                    currentCell.nextDirection = -Startdirection.DoorDirection;
                 }
 
                 StairCell staircell = new StairCell((current + NextPosition) / 2, CellType.Stair, new List<CollidorCell> { currentCell, stair1, stair2, nextCell });
@@ -157,10 +157,10 @@ public static class CollidorCalculator
                 {
                     currentCell.previousDirection = GoalDirection.DoorDirection;
                 }
-                currentCell.nextDirection = NextPosition - cameFrom[NextPosition];
+                currentCell.nextDirection = NextPosition - current;
                 if (current == start)
                 {
-                    currentCell.nextDirection = Startdirection.DoorDirection;
+                    currentCell.nextDirection = -Startdirection.DoorDirection;
                 }
 
                 path.Add(currentCell);
@@ -173,9 +173,9 @@ public static class CollidorCalculator
         }
         if(path.FirstOrDefault(a => a.Position == start) == null)
         {
-            CollidorCell currentCell = new CollidorCell(current, CellType.Collidor);
+            CollidorCell currentCell = new CollidorCell(start, CellType.Collidor);
             currentCell.previousDirection = lastCell.nextDirection;
-            currentCell.nextDirection = Startdirection.DoorDirection;
+            currentCell.nextDirection = -Startdirection.DoorDirection;
             path.Add(currentCell); // optional
             gridCells[start].CellType = CellType.Collidor;
         }

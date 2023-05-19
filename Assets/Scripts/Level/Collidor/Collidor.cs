@@ -21,4 +21,5 @@ public class Collidor : SerializedMonoBehaviour
     {
         Collidors.Add(cell);
     }
+
 }

@@ -98,6 +98,7 @@ public class CollidorGenerator : Singleton
                         Hallway hallway = obj.GetComponent<Hallway>();   
                         hallway.InitiateHallway(cell);
                         collidor.AddCell(hallway);
+                        allCollidors.Add(obj);
                     }
                     else if (cell is StairCell)
                     {
@@ -108,7 +109,7 @@ public class CollidorGenerator : Singleton
                         Stair stair = Instantiate(StairPrefab, stairCell.cells[0].Position + (stairCell.cells[3].Position - stairCell.cells[0].Position) / 2, rotation, collidor.gameObject.transform).gameObject.GetComponent<Stair>();
                         stair.InitiateStair(stairCell.cells);
                         collidor.AddCell(stair);
- 
+                        allCollidors.Add(stair.gameObject);
 
                     }
                 }

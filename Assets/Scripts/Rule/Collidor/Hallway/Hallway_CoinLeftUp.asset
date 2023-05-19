@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bacda8513cf664741833e363d1033f23, type: 3}
-  m_Name: Hallway_ForwardX
+  m_Name: Hallway_CoinLeftUp
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -40,13 +40,13 @@ MonoBehaviour:
       Data: UnityEngine.Vector3, UnityEngine.CoreModule
     - Name: 
       Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
       Data: 1
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -98,14 +98,14 @@ MonoBehaviour:
       Data: UnityEngine.Vector3, UnityEngine.CoreModule
     - Name: 
       Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
       Data: -1
     - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
-      Entry: 4
-      Data: 0
-    - Name: 
       Entry: 8
       Data: 
     - Name: 
@@ -120,5 +120,5 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  rotation: {x: 0, y: 0, z: 0}
-  prefab: {fileID: 9210892081266169529, guid: 0d99d7dd34c3dac45904b3161e9cf28b, type: 3}
+  rotation: {x: 0, y: -90, z: 0}
+  prefab: {fileID: 9210892081266169529, guid: cb059b21634c3da4190e2f84d771ea6e, type: 3}
