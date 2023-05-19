@@ -43,3 +43,167 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61be3033a2d47fa448446b0621cb8565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 6579293a0bbdecc44a93bb00334b1223, type: 2}
+    - {fileID: 11400000, guid: 7e73d8f56b43b93478f875fe7276e166, type: 2}
+    - {fileID: 11400000, guid: 86a61d9b46285c04d8a5ba58bdb2f3ff, type: 2}
+    - {fileID: 11400000, guid: 7e8f917a2cb87a7429ad93475f483910, type: 2}
+    - {fileID: 11400000, guid: fe0ca43143bfb0142ac021913e1b773f, type: 2}
+    - {fileID: 11400000, guid: 89a2398abb5b11f4dbcbd354ba03e347, type: 2}
+    - {fileID: 11400000, guid: 315f3951e5a0a5747bb9c238d2baffd1, type: 2}
+    - {fileID: 11400000, guid: abed5d5f92774044c9fba763c094235a, type: 2}
+    - {fileID: 11400000, guid: a98e3d88d9ea05144b6a0ba06663e6b7, type: 2}
+    - {fileID: 11400000, guid: 1a27e0ef1691ba5489ff792d8824b02e, type: 2}
+    - {fileID: 11400000, guid: 5e6d811e27ad1774ab370893065f0e26, type: 2}
+    - {fileID: 11400000, guid: bb19ea72a0ea4b04d9e019a6a9f131d9, type: 2}
+    - {fileID: 11400000, guid: 3d8ef3f3e6351ce4ea2dd80dbfdd9810, type: 2}
+    - {fileID: 11400000, guid: cc9b3c89aacc8794d88f352768ef50d9, type: 2}
+    - {fileID: 11400000, guid: 85291b67255c89243bd04a144860bf35, type: 2}
+    - {fileID: 11400000, guid: d194581510bcf6c4a9ef13892fe3c72f, type: 2}
+    - {fileID: 11400000, guid: a73192472718d564a9d9f16d8b416728, type: 2}
+    - {fileID: 11400000, guid: 84007f299693d5a4887941aca2e79202, type: 2}
+    - {fileID: 11400000, guid: 9d34e2a757256a44bad050a01f2bf079, type: 2}
+    - {fileID: 11400000, guid: e6dba9613e8e85f4cb47d22985899fab, type: 2}
+    - {fileID: 11400000, guid: 41b4ac53791b1ba47b6091b66bc26df7, type: 2}
+    - {fileID: 11400000, guid: 8710b59b73d267c409b7aadc31772978, type: 2}
+    - {fileID: 11400000, guid: 61fe6e05d88f77945865feab0e16480d, type: 2}
+    - {fileID: 11400000, guid: 8d23b536a704dcf4abb23ac71b5fb48a, type: 2}
+    - {fileID: 11400000, guid: e828c327db1845e4398d30c6a63d1757, type: 2}
+    - {fileID: 11400000, guid: b398c70e17c69cf45b18d914314dd8ba, type: 2}
+    - {fileID: 11400000, guid: 8a99cea0ac5bc024e8060ca4f13dabcd, type: 2}
+    - {fileID: 11400000, guid: 5b5342a7ec04b174c8f259ed2fc55fde, type: 2}
+    - {fileID: 11400000, guid: b29dd86799b0c024ab6430c448805596, type: 2}
+    - {fileID: 11400000, guid: 00540994d4f89bb468407050fd54f82f, type: 2}
+    - {fileID: 11400000, guid: 072140d631edac7449abae43fd03366d, type: 2}
+    - {fileID: 11400000, guid: 3fa5f29778be83a41aa521b8a4f51844, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: rules
+      Entry: 7
+      Data: 0|System.Collections.Generic.HashSet`1[[BaseCollidorRule, Assembly-CSharp]],
+        System.Core
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Rules
+      Entry: 7
+      Data: 1|System.Collections.Generic.HashSet`1[[StairRule, Assembly-CSharp]],
+        System.Core
+    - Name: 
+      Entry: 12
+      Data: 32
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 10
+      Data: 4
+    - Name: 
+      Entry: 10
+      Data: 5
+    - Name: 
+      Entry: 10
+      Data: 6
+    - Name: 
+      Entry: 10
+      Data: 7
+    - Name: 
+      Entry: 10
+      Data: 8
+    - Name: 
+      Entry: 10
+      Data: 9
+    - Name: 
+      Entry: 10
+      Data: 10
+    - Name: 
+      Entry: 10
+      Data: 11
+    - Name: 
+      Entry: 10
+      Data: 12
+    - Name: 
+      Entry: 10
+      Data: 13
+    - Name: 
+      Entry: 10
+      Data: 14
+    - Name: 
+      Entry: 10
+      Data: 15
+    - Name: 
+      Entry: 10
+      Data: 16
+    - Name: 
+      Entry: 10
+      Data: 17
+    - Name: 
+      Entry: 10
+      Data: 18
+    - Name: 
+      Entry: 10
+      Data: 19
+    - Name: 
+      Entry: 10
+      Data: 20
+    - Name: 
+      Entry: 10
+      Data: 21
+    - Name: 
+      Entry: 10
+      Data: 22
+    - Name: 
+      Entry: 10
+      Data: 23
+    - Name: 
+      Entry: 10
+      Data: 24
+    - Name: 
+      Entry: 10
+      Data: 25
+    - Name: 
+      Entry: 10
+      Data: 26
+    - Name: 
+      Entry: 10
+      Data: 27
+    - Name: 
+      Entry: 10
+      Data: 28
+    - Name: 
+      Entry: 10
+      Data: 29
+    - Name: 
+      Entry: 10
+      Data: 30
+    - Name: 
+      Entry: 10
+      Data: 31
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  position: {x: 0, y: 0, z: 0}

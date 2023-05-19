@@ -14,7 +14,6 @@ public class Hallway : CollidorRoom
     {
         foreach (var rule in rules)
         {
-
             foreach (List<Vector3> directions in rule.directions)
             {
                 if (cell.previousDirection == directions[0] && cell.nextDirection == directions[1])

@@ -10,3 +10,4 @@ public class BaseCollidorRule : SerializedScriptableObject
     public Vector3 rotation;
     public GameObject prefab;
 }
+
