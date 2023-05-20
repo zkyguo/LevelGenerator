@@ -57,7 +57,7 @@ public class MyGridSystem : Singleton
             ExtendGrid(worldPosition, size); //Check if need extend grid
             Vector3 offset = new Vector3(size.x % 2 == 0 ? 0 : 0.5f, size.y % 2 == 0 ? 0 : 0.5f, size.z % 2 == 0 ? 0 : 0.5f);
             GameObject gameObject = Instantiate(prefab, worldPosition + offset, Quaternion.identity);
-            //gameObject.transform.localScale = size;
+            gameObject.transform.localScale = size;
             gameObject.GetComponent<Room>().setRoom(size, PlaceObject(worldPosition, size, gameObject.GetComponent<Room>()));
             return gameObject;
         }

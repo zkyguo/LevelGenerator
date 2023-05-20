@@ -44,9 +44,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc5570a24087adf4ab22523923aa0893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CentrePosition: {x: 0, y: 0, z: 0}
-  occupiedCells: []
-  boundaryCells: []
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: allRules
+      Entry: 7
+      Data: 0|System.Collections.Generic.HashSet`1[[RoomPlacementRule, Assembly-CSharp]],
+        System.Core
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   grid: {fileID: 0}
 --- !u!1 &5976752316729711868
 GameObject:

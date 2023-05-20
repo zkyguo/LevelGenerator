@@ -17,11 +17,9 @@ public class DungeonGenerator : Singleton
     
     public GameObject cubePrefab;
     public GenerationType type;
-    public int numberOfCubes = 10;
-    [SerializeField]
-    private Vector3Int minSize = new Vector3Int(2, 1, 2);
-    [SerializeField]
-    private Vector3Int maxSize = new Vector3Int(5, 2, 5);
+    private int numberOfCubes;
+    public Vector3Int minSize = new Vector3Int(2, 1, 2);
+    public Vector3Int maxSize = new Vector3Int(5, 2, 5);
     public float minDistance = 1.0f;
     public float maxDistance = 5.0f;
     [SerializeField]
@@ -36,13 +34,28 @@ public class DungeonGenerator : Singleton
     [SerializeField]
     private CollidorGenerator Collidor; //TODO : change to auto get Grid or Put grid to static
 
-    [Button("Generate")]
-    private void Generate()
+    
+
+    public void Generate()
     {
-        PlaceRandomRoom();
-        path?.GeneratePath();
-        Collidor?.GenerateCollidors();
-        ApplyRulesRoom();
+        if(numberOfCubes != 0)
+        {
+            PlaceRandomRoom();
+            if (path == null)
+            {
+                path = SingletonManager.Instance.GetSingleton<PathGenerator>();
+
+            }
+            path?.GeneratePath();
+            if (Collidor == null)
+            {
+                Collidor = SingletonManager.Instance.GetSingleton<CollidorGenerator>();
+
+            }
+            Collidor?.GenerateCollidors();
+            //ApplyRulesRoom();
+        }
+
     }
 
     private void PlaceRandomRoom()
@@ -130,6 +143,10 @@ public class DungeonGenerator : Singleton
 
     private void InitializeGrid()
     {
+        if(grid == null)
+        {
+            grid = SingletonManager.Instance.GetSingleton<MyGridSystem>();
+        }
         grid.Clear();
         grid.Initialize(boundsRadius);
     }
@@ -141,5 +158,17 @@ public class DungeonGenerator : Singleton
             room.GetComponent<Room>().ApplyRules();
         }
     }
+
+    #region Getter Setter
+    public void SetRoomNumber(int value)
+    {
+        numberOfCubes = value;
+    }
+
+    public void setMaxSize(Vector3Int value)
+    {
+        maxSize = value;
+    }
+    #endregion
 }
 

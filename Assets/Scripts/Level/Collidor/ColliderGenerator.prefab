@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -53,3 +53,7 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   grid: {fileID: 0}
+  CollidorPrefab: {fileID: 9166803442482108169, guid: 8610010a88124c04ab6bef9cb91a860a, type: 3}
+  HallwayPrefab: {fileID: 1165274927514890706, guid: f0c800badfae22249805d72ae01086d7, type: 3}
+  StairPrefab: {fileID: 1165274927514890706, guid: a0d8f9b6043d90c4693101167112af4d, type: 3}
+  path: {fileID: 0}

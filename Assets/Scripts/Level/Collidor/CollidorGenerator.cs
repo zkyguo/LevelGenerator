@@ -56,15 +56,24 @@ public class CollidorGenerator : Singleton
     GameObject HallwayPrefab;
     [SerializeField]
     GameObject StairPrefab;
-
+    [SerializeField]
+    PathGenerator path;
     private List<GameObject> allCollidors = new List<GameObject>();
 
     [Button("Generate")]
     public void GenerateCollidors()
     {
         Clear();
+        if(grid == null)
+        {
+            grid = SingletonManager.Instance.GetSingleton<MyGridSystem>();
+        }
+        if(path == null)
+        {
+            path = SingletonManager.Instance.GetSingleton<PathGenerator>();
+        }
         grid.ResetGrid();
-        connectedRoom = SingletonManager.Instance.GetSingleton<PathGenerator>().getConnectRoom();
+        connectedRoom = path.getConnectRoom();
         foreach (var pair in connectedRoom)
         {
             List<CollidorCell> path = CollidorCalculator.FindPath(pair.Key.GetComponent<Room>(),
@@ -95,9 +104,9 @@ public class CollidorGenerator : Singleton
                     if (cell.CellType == CellType.Collidor)
                     {
                         GameObject obj = Instantiate(HallwayPrefab, road[i].Position, Quaternion.identity, collidor.gameObject.transform);
-                        Hallway hallway = obj.GetComponent<Hallway>();   
-                        hallway.InitiateHallway(cell);
-                        collidor.AddCell(hallway);
+                        //Hallway hallway = obj.GetComponent<Hallway>();   
+                        //hallway.InitiateHallway(cell);
+                        //collidor.AddCell(hallway);
                         allCollidors.Add(obj);
                     }
                     else if (cell is StairCell)
@@ -106,14 +115,15 @@ public class CollidorGenerator : Singleton
 
                         Vector3 normal = Vector3.Cross(stairCell.cells[1].Position - stairCell.cells[0].Position, stairCell.cells[2].Position - stairCell.cells[0].Position).normalized;
                         Quaternion rotation = Quaternion.LookRotation(normal);
-                        Stair stair = Instantiate(StairPrefab, stairCell.cells[0].Position + (stairCell.cells[3].Position - stairCell.cells[0].Position) / 2, rotation, collidor.gameObject.transform).gameObject.GetComponent<Stair>();
-                        stair.InitiateStair(stairCell.cells);
-                        collidor.AddCell(stair);
-                        allCollidors.Add(stair.gameObject);
+                        GameObject obj = Instantiate(StairPrefab, stairCell.cells[0].Position + (stairCell.cells[3].Position - stairCell.cells[0].Position) / 2, rotation, collidor.gameObject.transform);
+                        //Stair stair = obj.GetComponent<Stair>();
+                        //stair.InitiateStair(stairCell.cells);
+                        //collidor.AddCell(stair);
+                        allCollidors.Add(obj.gameObject);
 
                     }
                 }
-                collidor.ApplyRules();
+                //collidor.ApplyRules();
                 allCollidors.Add(collidor.gameObject);
             }
             

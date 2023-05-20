@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
+    SerializedFormat: 0
     SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
@@ -52,12 +52,15 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  cubePrefab: {fileID: 695646413995744839, guid: 3c7c3c98f4cd28948b9de11a900d91c2, type: 3}
+  cubePrefab: {fileID: 1517917683931996765, guid: 6f8c1432f974b3f438e63d448986767f, type: 3}
   type: 0
-  numberOfCubes: 10
+  numberOfCubes: 0
   minSize: {x: 3, y: 2, z: 3}
   maxSize: {x: 5, y: 3, z: 5}
   minDistance: 3
   maxDistance: 5
-  boundsRadius: 10
+  boundsRadius: {x: 10, y: 5, z: 10}
   maxIteration: 10
+  grid: {fileID: 0}
+  path: {fileID: 0}
+  Collidor: {fileID: 0}

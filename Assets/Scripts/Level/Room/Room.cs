@@ -33,7 +33,6 @@ public class Room : SerializedMonoBehaviour
     Dictionary<Vector3, Cell> allBoundary = new Dictionary<Vector3, Cell>();
     public HashSet<RoomPlacementRule> allRules = new HashSet<RoomPlacementRule>();
     HashSet<int> allIndex = new HashSet<int>();
-
     MyGridSystem grid;
 
     public void setRoom(Vector3Int _size, List<Vector3> allNodeInside)
@@ -190,7 +189,7 @@ public class Room : SerializedMonoBehaviour
         return CentrePosition;
     }
 
-    private void OnDrawGizmos()
+ /*   private void OnDrawGizmos()
     {
         foreach (var cell in doorCells)
         {
@@ -198,7 +197,7 @@ public class Room : SerializedMonoBehaviour
             Gizmos.DrawSphere(cell.Key, 0.2f);
         }
     }
-
+*/
 
     private void OnDestroy()
     {

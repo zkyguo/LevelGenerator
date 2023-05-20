@@ -31,7 +31,6 @@ public class Singleton : SerializedMonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
         }
 
     }
