@@ -6,6 +6,7 @@ public static class CollidorCalculator
 {
     public static List<CollidorCell> FindPath(Room roomA, Room roomB, Dictionary<Vector3, Cell> gridCells)
     {
+       
         int nbTry = 5;
         while (nbTry != 0)
         {
@@ -29,6 +30,7 @@ public static class CollidorCalculator
 
             while (!frontier.IsEmpty())
             {
+                Debug.Log("Finding Collidor");
                 Vector3 current = frontier.Dequeue();
 
                 if (current == goal)

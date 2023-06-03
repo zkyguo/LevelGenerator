@@ -25,6 +25,13 @@ public class PathGenerator : Singleton
         FindAllConnection();
     }
 
+    public void GeneratePathAndCollidor()
+    {
+        AddRoomsInScene();
+        FindAllConnection();
+        SingletonManager.Instance.GetSingleton<CollidorGenerator>().GenerateCollidors();
+    }
+
     /// <summary>
     /// Use to determinate which room are connected together
     /// </summary>

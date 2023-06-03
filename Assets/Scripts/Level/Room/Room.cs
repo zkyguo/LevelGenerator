@@ -56,13 +56,15 @@ public class Room : SerializedMonoBehaviour
         
     }
 
+
+
     public CollidorDirection GetRandomBoundaryCell()
     {
         // Randomly select one of the boundary cells
         if (allBoundary.Count > 0)
         {
             int randomIndex = UnityEngine.Random.Range(0, allBoundary.Count);
-            while (!allIndex.Add(randomIndex))
+            while (allIndex.Add(randomIndex) && allIndex.Count != allBoundary.Count)
             {
                 randomIndex = UnityEngine.Random.Range(0, allBoundary.Count);
             }
@@ -216,6 +218,11 @@ public class Room : SerializedMonoBehaviour
         Vector3 vector2 = new Vector3(2, 2, 2);
         return new CollidorDirection { CollidorStart = vector1, DoorDirection = vector2 };
     }
+    
+    public void ResetRoom()
+    {
+        allIndex.Clear(); 
+    }    
 
 }
 

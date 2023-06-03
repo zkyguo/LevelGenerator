@@ -625,6 +625,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8586245673538343603, guid: 6401c59cd64a79f42b07cff13e2be0bf, type: 3}
+      propertyPath: boundsRadius.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8586245673538343603, guid: 6401c59cd64a79f42b07cff13e2be0bf, type: 3}
+      propertyPath: boundsRadius.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8586245673538343603, guid: 6401c59cd64a79f42b07cff13e2be0bf, type: 3}
+      propertyPath: boundsRadius.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8586245673538343603, guid: 6401c59cd64a79f42b07cff13e2be0bf, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 0}
@@ -4834,7 +4846,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1950269744}
         m_TargetAssemblyTypeName: PathGenerator, Assembly-CSharp
-        m_MethodName: GeneratePath
+        m_MethodName: GeneratePathAndCollidor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7966,8 +7978,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
-  m_LocalRotation: {x: 0.24214365, y: -0.2817351, z: 0.07371156, w: 0.9255044}
-  m_LocalPosition: {x: 37.843925, y: 38.655518, z: -56.14401}
+  m_LocalRotation: {x: -0.107427604, y: -0.8905665, z: 0.27929416, w: -0.34255716}
+  m_LocalPosition: {x: -45.21072, y: 46.41161, z: 50.519356}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

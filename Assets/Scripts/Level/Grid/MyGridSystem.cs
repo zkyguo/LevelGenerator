@@ -390,4 +390,15 @@ public class MyGridSystem : Singleton
     {
         gridCells = new Dictionary<Vector3,Cell>(initialCells);
     }
+
+    public void ResetCollidor()
+    {
+        foreach (var item in gridCells)
+        {
+            if(item.Value.CellType == CellType.Collidor)
+            {
+                item.Value.CellType = CellType.Void;
+            }
+        }
+    }
 }

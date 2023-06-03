@@ -14,6 +14,7 @@ public class DungeonUI : MonoBehaviour
     Slider RoomSlider;
     [SerializeField]
     TextMeshProUGUI RoomNumber ;
+    int InitNumber = 5;
 
     [SerializeField]
     Slider maxXSlider;
@@ -51,17 +52,20 @@ public class DungeonUI : MonoBehaviour
     TextMeshProUGUI gridZ;
 
     Vector3Int newMaxSize = new Vector3Int();
-    Vector3Int newGridSize = new Vector3Int();
+    Vector3Int newGridSize = new Vector3Int(10,10,10);
 
     // Start is called before the first frame update
     void Start()
     {
+        Init();
+
         RoomSlider.onValueChanged.AddListener((v) =>
         {
             RoomNumber.text = v.ToString();
             generator.SetRoomNumber((int)v);
 
         });
+
 
         maxXSlider.onValueChanged.AddListener((v) =>
         {
@@ -114,5 +118,19 @@ public class DungeonUI : MonoBehaviour
         generator.type = (GenerationType)selectedIndex;
     }
 
+    private void Init()
+    {
+        generator.SetRoomNumber(InitNumber);
+        RoomNumber.text = InitNumber.ToString();
+        RoomSlider.value = InitNumber;
+
+        gridX.text = newGridSize.x.ToString();
+        gridY.text = newGridSize.y.ToString();
+        gridZ.text = newGridSize.z.ToString();
+        generator.boundsRadius = newGridSize;
+        GridXSlider.value = newGridSize.x;
+        GridYSlider.value = newGridSize.y;
+        GridZSlider.value = newGridSize.z;
+    }
 
 }
